@@ -142,6 +142,7 @@
   },
   "dependencies": {
     "frameless-titlebar": "^2.1.3",
+    "moment": "^2.26.0",
     "normalize.css": "^8.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
