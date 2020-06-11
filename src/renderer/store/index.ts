@@ -3,8 +3,12 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { rootReducer, RootState } from '../reducers';
 
+import thunk from 'redux-thunk';
+
 const configureStore = (initialState?: RootState): Store<RootState | undefined> => {
-    const middlewares: any[] = [];
+    const middlewares: any[] = [
+        thunk
+    ];
     const enhancer = composeWithDevTools(applyMiddleware(...middlewares));
     return createStore(rootReducer, initialState, enhancer);
 };

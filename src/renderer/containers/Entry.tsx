@@ -2,42 +2,51 @@ import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import Topbar from './Topbar/Topbar';
 
-require('./Entry.scss');
+require( './Entry.scss' );
 import 'normalize.css';
-import {
-    loadMostRecentBookmarkBlob, saveBookmarkBlob
-} from '../services/bookmarksBlobLoader';
-import { exampleSchema } from '../schemas/bookmarkSchemas';
-import moment from 'moment';
+import { connect, ConnectedProps } from 'react-redux';
+import { LoadAllBlobsActionCreator } from '../actions/load/bookmarksLoadActions';
+import { IAllBlobsState } from '../reducers/blobsReducers/load/AllBlobsReducer';
+import { RootState } from '../reducers';
 
-class Entry extends React.Component {
-    state = {
-        bookmarks: []
-    }
+const mapStateToProps = ( {allBlobs}: RootState ) => ({
+    ...allBlobs
+});
 
+const mapDispatchToProps = {
+    LoadAllBlobs: LoadAllBlobsActionCreator
+};
+
+const connector = connect( mapStateToProps, mapDispatchToProps );
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+class Entry extends React.Component<PropsFromRedux> {
     render() {
+        const { hasError, isLoading, items, reason } = this.props;
         return (
             <>
                 {/* Custom Topbar */}
                 <Topbar />
 
-                <p>{JSON.stringify(this.state.bookmarks)}</p>
-                <button onClick={async () => {
-                    const bookmarks = await loadMostRecentBookmarkBlob();
-                    this.setState({
-                        bookmarks
-                    })
-                }}>Fetch</button>
-                <button onClick={async () => {
-                    const testSchema = exampleSchema;
-                    exampleSchema.createdAt = +moment().format('YYYYMMDDHHmmss');
-                    console.log(testSchema);
-                    const succ = await saveBookmarkBlob(testSchema);
-                    alert(succ);
-                }}>Save</button>
+                {
+                    isLoading ? <p>Loading</p>
+                        : (
+                            hasError ? <p>{reason}</p>
+                                : (
+                                    <p>{JSON.stringify(items)}</p>
+                                )
+                        )
+                }
+
+                <button onClick={() => {
+                    this.props.LoadAllBlobs();
+                }}>
+                    GetAll
+                </button>
             </>
         );
     }
 }
 
-export default hot(Entry);
+
+export default connector( hot( Entry ) );

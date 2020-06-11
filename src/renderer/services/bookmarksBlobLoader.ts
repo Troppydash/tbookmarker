@@ -1,95 +1,14 @@
 /// Manages the loading and saving of bookmarks
 
 import { BookmarkBlob, BookmarksSchema } from '../schemas/bookmarkSchemas';
-import fs from 'fs';
-
-const fsPromise = fs.promises;
-
-/**
- * Create the folders given a folder path, returns if the action succeeded
- * @param path
- * @returns {boolean}
- * @constructor
- */
-function CreateFoldersIfNotExists( path: string ): boolean {
-    if ( !fs.existsSync( path ) ) {
-        try {
-            fs.mkdirSync( path, { recursive: true } );
-            return true;
-        } catch ( e ) {
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * Get the root storage path of Tbookmarker
- * @returns {string | null}
- * @constructor
- */
-function GetApplicationStoragePath(): string | null {
-    const home = require( 'os' ).homedir();
-    const rootURL = `${home}/Documents/tbookmarker`;
-    if ( !CreateFoldersIfNotExists( rootURL ) ) {
-        return null;
-    }
-    return `${home}/Documents/tbookmarker`;
-}
-
-/**
- * Get the bookmark json files storage path
- * @returns {string | null}
- * @constructor
- */
-function GetApplicationBookmarkStoragePath() {
-    const result = GetApplicationStoragePath();
-    if ( result === null ) {
-        return null;
-    }
-
-    const bookmarkPath = `${result}/storage/`;
-    if ( !CreateFoldersIfNotExists( bookmarkPath ) ) {
-        return null;
-    }
-    return bookmarkPath;
-}
-
-
-/**
- * Async function to read all the files in a directory
- * @param dirname
- * @param onFile
- * @returns {Promise<any[]>}
- */
-async function readFiles( dirname: string, onFile: ( filename: string, content: any ) => any ): Promise<any[]> {
-    const files: any[] = await fsPromise.readdir( dirname );
-    if ( files === null ) {
-        return [];
-    }
-
-    const result = [];
-    for ( const filename of files ) {
-        const content = await fsPromise.readFile( dirname + filename, 'utf-8' );
-        if ( content !== null ) {
-            result.push( onFile( filename, content ) );
-        }
-    }
-    return result;
-}
-
+import { readFilesFromStorage, writeFileToStorage } from './storageHandlers';
 
 /**
  * Async function to load all the bookmarks
  * @returns {Promise<any[] | null>}
  */
 export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
-    const folderPath = GetApplicationBookmarkStoragePath();
-    if ( folderPath === null ) {
-        return null;
-    }
-
-    return await readFiles( folderPath, ( filename, content ) => {
+    return await readFilesFromStorage<BookmarkBlob>(( filename, content ) => {
         try {
             const bookmark = JSON.parse( content );
             return {
@@ -110,14 +29,9 @@ export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
  * @returns {Promise<any>}
  */
 export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null> {
-    const folderPath = GetApplicationBookmarkStoragePath();
-    if ( folderPath === null ) {
-        return null;
-    }
-
-    const items = await readFiles( folderPath, ( filename, content ) => {
+    const items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
         try {
-            const bookmark = JSON.parse( content );
+            const bookmark: BookmarksSchema = JSON.parse( content );
             return {
                 title: filename.split( '.' )[0],
                 bookmarks: bookmark
@@ -150,17 +64,10 @@ export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null>
  */
 export async function saveBookmarkBlob( targetBookmark: BookmarksSchema ): Promise<boolean> {
     const filename = `bookmark_${targetBookmark.createdAt}.json`;
-    const storagePath = GetApplicationBookmarkStoragePath();
 
     try {
         const strContent = JSON.stringify(targetBookmark);
-        return await fsPromise.writeFile(storagePath + filename, strContent)
-            .then(() => {
-                return true;
-            })
-            .catch(err => {
-                return false;
-            })
+        return await writeFileToStorage(filename, strContent);
     } catch ( e ) {
         return false;
     }
