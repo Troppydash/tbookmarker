@@ -1,17 +1,18 @@
 import React from 'react';
 
 import TitleBar from 'frameless-titlebar';
+
 const icon = require( './icon.png' );
 
 import * as Menus from './Menu/customMenu';
 import { remote } from 'electron';
 
 const currentWindow = remote.getCurrentWindow();
-require( './Topbar.scss' );
+import Styles from './Topbar.scss';
 
 function Topbar() {
     return (
-        <div>
+        <div className={Styles.icon}>
             <TitleBar
                 icon={<img src={icon} className="icon" alt="App Icon" />}
                 currentWindow={currentWindow}

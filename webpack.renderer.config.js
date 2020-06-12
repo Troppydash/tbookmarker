@@ -34,11 +34,30 @@ module.exports = merge.smart(baseConfig, {
             },
             {
                 test: /\.scss$/,
-                loaders: ['style-loader', 'css-loader', 'sass-loader']
+                use: [
+                    { loader: "style-loader" },
+                    // { loader: "css-modules-typescript-loader"},
+                    { loader: "css-loader", options: { modules: true } },
+                    { loader: "sass-loader" },
+                ],
+                include: /\.module\.scss$/
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    { loader: "style-loader" },
+                    { loader: "css-loader" },
+                    { loader: "sass-loader" },
+                ],
+                exclude: /\.module\.scss$/
             },
             {
                 test: /\.css$/,
                 loaders: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                loaders: ['file-loader']
             },
             {
                 test: /\.(gif|png|jpe?g|svg)$/,
