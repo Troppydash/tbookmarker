@@ -10,6 +10,13 @@ import { ThunkAction } from 'redux-thunk';
 import { BookmarksSchema } from '../../schemas/bookmarkSchemas';
 import { saveBookmarkBlob } from '../../services/bookmarksBlobLoader';
 
+
+/**
+ * Save a single bookmark to storage, replace if two createdAt field matches
+ * @param bookmark
+ * @returns {(dispatch: Dispatch) => Promise<IHandleSaveSingleBlobAction>}
+ * @constructor
+ */
 export const SaveSingleBookmarkBlobActionCreator: ActionCreator<ThunkAction<Promise<THandleSavingBlobActions>, unknown, BookmarksSchema, THandleSavingBlobActions>>
     = ( bookmark: BookmarksSchema ) => async ( dispatch: Dispatch ) => {
     dispatch( SavingSingleBlobActionCreator() );

@@ -13,8 +13,18 @@ import {
     LOADING_SINGLE_BLOB
 } from './bookmarksLoadActionsTypes';
 import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
-import { loadAllBookmarksBlobs, loadMostRecentBookmarkBlob } from '../../services/bookmarksBlobLoader';
+import {
+    loadAllBookmarksBlobs,
+    loadBookmarkBlobByDate,
+    loadMostRecentBookmarkBlob
+} from '../../services/bookmarksBlobLoader';
 
+
+/**
+ * Load all bookmarks it can find
+ * @returns {(dispatch: Dispatch) => Promise<IHandleLoadAllBlobsAction>}
+ * @constructor
+ */
 export const LoadAllBlobsActionCreator: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, null, THandleLoadBlobActions>>
     = () => async ( dispatch: Dispatch ) => {
 
@@ -27,11 +37,19 @@ export const LoadAllBlobsActionCreator: ActionCreator<ThunkAction<Promise<THandl
     return dispatch( HandleLoadAllBlobsActionCreator( false, bookmarks, undefined ) );
 };
 
-export const LoadSingleBlobActionCreator: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, null, THandleLoadBlobActions>>
-    = () => async ( dispatch: Dispatch ) => {
+/**
+ * Load a single bookmark from storage, Default to most recent if date not specified
+ * @returns {(dispatch: Dispatch) => Promise<IHandleLoadSingleBlobAction>}
+ * @constructor
+ */
+export const LoadSingleBlobActionCreator: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, number, THandleLoadBlobActions>>
+    = ( date?: number ) => async ( dispatch: Dispatch ) => {
 
     dispatch( LoadingSingleBlobActionCreator() );
-    const bookmark: BookmarkBlob | null = await loadMostRecentBookmarkBlob();
+    const bookmark: BookmarkBlob | null =
+        date
+            ? await loadBookmarkBlobByDate( date )
+            : await loadMostRecentBookmarkBlob();
     if ( bookmark == null ) {
         return dispatch( HandleLoadSingleBlobActionCreator( true, null, 'Unable to get one bookmarks.' ) );
     }

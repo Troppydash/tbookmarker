@@ -25,6 +25,34 @@ export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
 }
 
 /**
+ * Load a single bookmark by date
+ * @param date
+ * @returns {Promise<null | BookmarkBlob>}
+ */
+export async function loadBookmarkBlobByDate(date: number): Promise<BookmarkBlob | null> {
+    let items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
+        try {
+            const bookmark: BookmarksSchema = JSON.parse( content );
+            return {
+                title: filename.split( '.' )[0],
+                bookmarks: bookmark
+            };
+        } catch ( e ) {
+            return {
+                title: filename.split('.')[0],
+                bookmarks: null
+            };
+        }
+    } );
+
+    items = items.filter((blob: BookmarkBlob) => {
+        return +blob.title === date;
+    });
+
+    return items.length < 1 ? null : items[0];
+}
+
+/**
  * Async function to load the most recent bookmarks
  * @returns {Promise<any>}
  */
@@ -58,7 +86,7 @@ export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null>
 
 
 /**
- * Save a blob to the storage named by its created field
+ * Save a blob to the storage named by its created field, replacing if exists
  * @param targetBookmark
  * @returns {Promise<boolean>}
  */
