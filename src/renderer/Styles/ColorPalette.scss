@@ -4,6 +4,33 @@ $medium: #8F857D;
 $high: #5C5552;
 $highest: #433633;
 
+// All the theme colors below
+$border-separator-background: $highest;
+
+$navbar-background: $high;
+$navbar-text: $lowest;
+
+$navbar-text: $lowest;
+
+$pane-header-background: $high;
+$pane-header-text: $lowest;
+
+$pane-items-background: $lowest;
+$pane-items-text: $highest;
+
+$pane-items-background__hovered: $low;
+$pane-items-text__hovered: $highest;
+
+$pane-items-background__selected: $medium;
+$pane-items-text__selected: $lowest;
+
+$pane-items-contextmenu-background: $lowest;
+
+$pane-items-contextmenu-items-background: $lowest;
+$pane-items-contextmenu-items-text: $highest;
+
+$pane-items-contextmenu-items-background__hovered: $low;
+$pane-items-contextmenu-items-text__hovered: $highest;
 
 $font-medium: 1rem;
 $font-small: 0.75rem;

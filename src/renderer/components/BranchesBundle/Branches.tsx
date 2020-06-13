@@ -30,6 +30,10 @@ class Branches extends Component<BranchesProps, BranchesState> {
         );
     };
 
+    onContextMenuClose = () => {
+
+    }
+
     render() {
         const { branches, selectedBranch, selectBranch } = this.props;
 

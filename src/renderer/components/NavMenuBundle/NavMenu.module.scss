@@ -1,10 +1,10 @@
 @import "./src/renderer/Styles/ColorPalette";
 
 .container {
-    background-color: $high;
+    background-color: $navbar-background;
 
-    border-bottom: 1px solid $highest;
-    color: $lowest;
+    border-bottom: 1px solid $border-separator-background;
+    color: $navbar-text;
 
     display: flex;
     align-items: center;

@@ -9,13 +9,13 @@
 }
 
 .folderContainerTitle {
-    background-color: $high;
-    color: $lowest;
+    background-color: $pane-header-background;
+    color: $pane-header-text;
 
 
     padding: $padding-small;
     font-size: $font-big;
-    border-right: 1px solid $highest;
+    border-right: 1px solid $border-separator-background;
 }
 
 .folderContainer {
@@ -31,30 +31,30 @@
     width: 100%;
     padding: $padding-small;
 
-    background-color: $lowest;
-    color: $highest;
+    background-color: $pane-items-background;
+    color: $pane-items-text;
 
     cursor: pointer;
 
     &:hover:not(.folderItemSelected) {
-        background-color: $low;
-        color: $highest;
+        background-color: $pane-items-background__hovered;
+        color: $pane-items-text__hovered;
     }
 }
 
 .folderItemSelected {
-    background-color: $medium;
-    color: $lowest;
+    background-color: $pane-items-background__selected;
+    color: $pane-items-text__selected;
 
     &:hover {
-        background-color: $medium;
-        color: $lowest;
+        background-color: $pane-items-background__selected;
+        color: $pane-items-text__selected;
     }
 }
 
 
 .contextMenu {
-    background-color: $lowest;
+    background-color: $pane-items-contextmenu-background;
     padding-left: 0;
     padding-right: 0;
 }
@@ -63,13 +63,13 @@
     width: 100%;
     padding: $padding-small;
 
-    background-color: $lowest;
-    color: $highest;
+    background-color: $pane-items-contextmenu-items-background;
+    color: $pane-items-contextmenu-items-text;
 
     cursor: pointer;
 
     &:hover {
-        background-color: $low;
-        color: $highest;
+        background-color: $pane-items-contextmenu-items-background__hovered;
+        color: $pane-items-contextmenu-items-text__hovered;
     }
 }
