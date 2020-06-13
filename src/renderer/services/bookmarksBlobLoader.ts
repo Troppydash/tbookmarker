@@ -3,6 +3,8 @@
 import { BookmarkBlob, BookmarksSchema } from '../schemas/bookmarkSchemas';
 import { readFilesFromStorage, writeFileToStorage } from './storageHandlers';
 
+import { v4 as uuidv4 } from 'uuid';
+
 /**
  * Async function to load all the bookmarks
  * @returns {Promise<any[] | null>}
@@ -12,11 +14,13 @@ export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
         try {
             const bookmark = JSON.parse( content );
             return {
+                uuid: uuidv4(),
                 title: filename.split( '.' )[0],
                 bookmarks: bookmark
             };
         } catch ( e ) {
             return {
+                uuid: uuidv4(),
                 title: filename.split('.')[0],
                 bookmarks: null
             };
@@ -34,11 +38,13 @@ export async function loadBookmarkBlobByDate(date: number): Promise<BookmarkBlob
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
             return {
+                uuid: uuidv4(),
                 title: filename.split( '.' )[0],
                 bookmarks: bookmark
             };
         } catch ( e ) {
             return {
+                uuid: uuidv4(),
                 title: filename.split('.')[0],
                 bookmarks: null
             };
@@ -61,11 +67,13 @@ export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null>
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
             return {
+                uuid: uuidv4(),
                 title: filename.split( '.' )[0],
                 bookmarks: bookmark
             };
         } catch ( e ) {
             return {
+                uuid: uuidv4(),
                 title: filename.split('.')[0],
                 bookmarks: null
             };

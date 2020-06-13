@@ -18,6 +18,7 @@ import {
     loadBookmarkBlobByDate,
     loadMostRecentBookmarkBlob
 } from '../../services/bookmarksBlobLoader';
+import { Queryer } from '../../services/bookmarkQueryer';
 
 
 /**
@@ -29,7 +30,7 @@ export const LoadAllBlobsActionCreator: ActionCreator<ThunkAction<Promise<THandl
     = () => async ( dispatch: Dispatch ) => {
 
     dispatch( LoadingAllBlobsActionCreator() );
-    const bookmarks: BookmarkBlob[] | null = await loadAllBookmarksBlobs();
+    const bookmarks: BookmarkBlob[] | null = await Queryer.selectAll();
     if ( bookmarks == null ) {
         return dispatch( HandleLoadAllBlobsActionCreator( true, null, 'Unable to get the bookmarks.' ) );
     }
@@ -48,8 +49,8 @@ export const LoadSingleBlobActionCreator: ActionCreator<ThunkAction<Promise<THan
     dispatch( LoadingSingleBlobActionCreator() );
     const bookmark: BookmarkBlob | null =
         date
-            ? await loadBookmarkBlobByDate( date )
-            : await loadMostRecentBookmarkBlob();
+            ? await Queryer.selectOneByDate( date )
+            : await Queryer.selectMostRecent();
     if ( bookmark == null ) {
         return dispatch( HandleLoadSingleBlobActionCreator( true, null, 'Unable to get one bookmarks.' ) );
     }

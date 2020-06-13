@@ -1,0 +1,26 @@
+@import "./src/renderer/Styles/ColorPalette";
+
+.container {
+    background-color: $high;
+
+    border-bottom: 1px solid $highest;
+    color: $lowest;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: $padding-medium;
+
+    height: 100%;
+    width: 100%;
+}
+
+.containerHeading {
+    font-size: $font-medium;
+    text-decoration: underline;
+}
+
+.sep {
+    margin: 0 0.25rem;
+}

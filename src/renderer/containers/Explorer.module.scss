@@ -1,3 +1,23 @@
 .explorerBody {
     height: calc(100vh - 28px);
+    width: 100%;
+}
+
+.navMenu {
+    height: 2rem;
+    width: 100%;
+}
+
+.navPanes {
+    height: calc(100% - 2rem);
+    width: 100%;
+
+    display: flex;
+}
+
+.commitsPane,
+.bookmarksPane,
+.branchesPane {
+    flex: 0 0 33.333333%;
+    height: 100%;
 }

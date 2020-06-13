@@ -1,0 +1,76 @@
+@import "./src/renderer/Styles/ColorPalette";
+
+.container {
+    height: auto;
+    width: 100%;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.folderContainerTitle {
+    background-color: $high;
+    color: $lowest;
+
+
+    padding: $padding-small;
+    font-size: $font-big;
+    border-right: 1px solid $highest;
+
+}
+
+.folderContainer {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    font-size: $font-medium;
+}
+
+.folderItem {
+    border-radius: 0;
+    width: 100%;
+    padding: $padding-small;
+
+    background-color: $lowest;
+    color: $highest;
+
+    cursor: pointer;
+
+    &:hover:not(.folderItemSelected) {
+        background-color: $low;
+        color: $highest;
+    }
+}
+
+.folderItemSelected {
+    background-color: $medium;
+    color: $lowest;
+
+    &:hover {
+        background-color: $medium;
+        color: $lowest;
+    }
+}
+
+
+.contextMenu {
+    background-color: $lowest;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.contextMenuItems {
+    width: 100%;
+    padding: $padding-small;
+
+    background-color: $lowest;
+    color: $highest;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: $low;
+        color: $highest;
+    }
+}

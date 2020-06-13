@@ -9,6 +9,7 @@ import {
 import { ThunkAction } from 'redux-thunk';
 import { BookmarksSchema } from '../../schemas/bookmarkSchemas';
 import { saveBookmarkBlob } from '../../services/bookmarksBlobLoader';
+import { Queryer } from '../../services/bookmarkQueryer';
 
 
 /**
@@ -20,7 +21,7 @@ import { saveBookmarkBlob } from '../../services/bookmarksBlobLoader';
 export const SaveSingleBookmarkBlobActionCreator: ActionCreator<ThunkAction<Promise<THandleSavingBlobActions>, unknown, BookmarksSchema, THandleSavingBlobActions>>
     = ( bookmark: BookmarksSchema ) => async ( dispatch: Dispatch ) => {
     dispatch( SavingSingleBlobActionCreator() );
-    const isSuccess = await saveBookmarkBlob( bookmark );
+    const isSuccess = await Queryer.saveOne( bookmark );
     if ( !isSuccess ) {
         return dispatch( HandleSaveSingleBlobActionCreator( true, undefined, 'Failed to save bookmark blob' ) );
     }
