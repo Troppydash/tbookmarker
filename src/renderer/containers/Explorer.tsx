@@ -65,6 +65,20 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         }
     }
 
+    handleGroupSelect = ( groupID: string ) => {
+        this.setState( {
+            selectedGroupID: groupID,
+            selectedBranchID: '',
+            selectedCommitID: '',
+            selectedBookmarkID: '',
+            branches: null,
+            commits: null,
+            bookmarks: null
+        }, () => {
+            this.setBranches();
+        } );
+    };
+
     handleBranchSelect = ( branchID: string ) => {
         this.setState( {
             selectedBranchID: branchID,
@@ -88,14 +102,14 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     };
 
     handleBookmarkSelect = ( bookmarkID: string ) => {
-        this.setState({
+        this.setState( {
             selectedBookmarkID: bookmarkID
-        })
+        } );
     };
 
     handleUpdateBookmark = ( bookmarkID: string, url: string, title: string ) => {
 
-    }
+    };
 
     // If error occurred
     haveError = () => {
@@ -181,6 +195,11 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                              selectedGroupID={selectedGroupID}
                              selectedBranchID={selectedBranchID}
                              selectedCommitID={selectedCommitID}
+
+                             selectBookmark={this.handleBookmarkSelect}
+                             selectCommit={this.handleCommitSelect}
+                             selectBranch={this.handleBranchSelect}
+                             selectGroup={this.handleGroupSelect}
                     />
                 </div>
 
