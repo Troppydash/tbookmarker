@@ -13,12 +13,8 @@ import {
     LOADING_SINGLE_BLOB
 } from './bookmarksLoadActionsTypes';
 import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
-import {
-    loadAllBookmarksBlobs,
-    loadBookmarkBlobByDate,
-    loadMostRecentBookmarkBlob
-} from '../../services/bookmarksBlobLoader';
-import { Queryer } from '../../services/bookmarkQueryer';
+import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
+import { DataOrNull } from '../../services/helpers';
 
 
 /**
@@ -26,11 +22,11 @@ import { Queryer } from '../../services/bookmarkQueryer';
  * @returns {(dispatch: Dispatch) => Promise<IHandleLoadAllBlobsAction>}
  * @constructor
  */
-export const LoadAllBlobsActionCreator: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, null, THandleLoadBlobActions>>
+export const LoadAllBlobs: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, null, THandleLoadBlobActions>>
     = () => async ( dispatch: Dispatch ) => {
 
     dispatch( LoadingAllBlobsActionCreator() );
-    const bookmarks: BookmarkBlob[] | null = await Queryer.selectAll();
+    const bookmarks: BookmarkBlob[] | null = await DataOrNull( Queryer.selectAll());
     if ( bookmarks == null ) {
         return dispatch( HandleLoadAllBlobsActionCreator( true, null, 'Unable to get the bookmarks.' ) );
     }
@@ -43,14 +39,14 @@ export const LoadAllBlobsActionCreator: ActionCreator<ThunkAction<Promise<THandl
  * @returns {(dispatch: Dispatch) => Promise<IHandleLoadSingleBlobAction>}
  * @constructor
  */
-export const LoadSingleBlobActionCreator: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, number, THandleLoadBlobActions>>
+export const LoadSingleBlob: ActionCreator<ThunkAction<Promise<THandleLoadBlobActions>, unknown, number, THandleLoadBlobActions>>
     = ( date?: number ) => async ( dispatch: Dispatch ) => {
 
     dispatch( LoadingSingleBlobActionCreator() );
     const bookmark: BookmarkBlob | null =
         date
-            ? await Queryer.selectOneByDate( date )
-            : await Queryer.selectMostRecent();
+            ? await DataOrNull( Queryer.selectOneByDate( date ) )
+            : await DataOrNull( Queryer.selectMostRecent() );
     if ( bookmark == null ) {
         return dispatch( HandleLoadSingleBlobActionCreator( true, null, 'Unable to get one bookmarks.' ) );
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { BookmarkBlob, BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../../schemas/bookmarkSchemas';
-import { Queryer } from '../../services/bookmarkQueryer';
+import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
 import path from 'path';
 
 import Styles from './NavMenu.module.scss';

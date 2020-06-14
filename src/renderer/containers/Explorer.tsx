@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import Styles from './Explorer.module.scss';
 
 import { RootState } from '../reducers';
-import { LoadAllBlobsActionCreator, LoadSingleBlobActionCreator } from '../actions/load/bookmarksLoadActions';
-import { SaveSingleBookmarkBlobActionCreator } from '../actions/save/bookmarksSaveActions';
+import { LoadAllBlobs, LoadSingleBlob } from '../actions/load/bookmarksLoadActions';
+import { SaveSingleBookmarkBlob } from '../actions/save/bookmarksSaveActions';
 import { connect, ConnectedProps } from 'react-redux';
 import NavMenu from '../components/NavMenuBundle/NavMenu';
 import Branches from '../components/BranchesBundle/Branches';
 import Commits from '../components/CommitsBundle/Commits';
 import Bookmarks from '../components/BookmarksBundle/Bookmarks';
-import { Queryer } from '../services/bookmarkQueryer';
+import { Queryer } from '../services/bookmarks/bookmarkQueryer';
 import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../schemas/bookmarkSchemas';
 
 // Redux connector
@@ -19,9 +19,9 @@ const mapStateToProps = ( state: RootState ) => ({
 });
 
 const mapDispatchToProps = {
-    LoadAllBlobs: LoadAllBlobsActionCreator,
-    LoadSingleBlob: LoadSingleBlobActionCreator,
-    SaveBlob: SaveSingleBookmarkBlobActionCreator
+    LoadAllBlobs: LoadAllBlobs,
+    LoadSingleBlob: LoadSingleBlob,
+    SaveBlob: SaveSingleBookmarkBlob
 };
 
 const connector = connect( mapStateToProps, mapDispatchToProps );
@@ -130,11 +130,12 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             data: this.props.singleBlob.item!.bookmarks!
         } )
             .then( branches => {
-                if ( branches !== null ) {
-                    this.setState( {
-                        branches
-                    } );
-                }
+                this.setState( {
+                    branches
+                } );
+            } )
+            .catch( err => {
+                alert( err );
             } );
     };
 
@@ -151,11 +152,12 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             data: this.props.singleBlob.item!.bookmarks!
         } )
             .then( commits => {
-                if ( commits !== null ) {
-                    this.setState( {
-                        commits
-                    } );
-                }
+                this.setState( {
+                    commits
+                } );
+            } )
+            .catch( err => {
+                alert( err );
             } );
     };
 
@@ -172,11 +174,12 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             data: this.props.singleBlob.item!.bookmarks!
         } )
             .then( bookmarks => {
-                if ( bookmarks !== null ) {
-                    this.setState( {
-                        bookmarks
-                    } );
-                }
+                this.setState( {
+                    bookmarks
+                } );
+            } )
+            .catch( err => {
+                alert( err );
             } );
     };
 

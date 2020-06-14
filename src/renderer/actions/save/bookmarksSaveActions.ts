@@ -8,8 +8,8 @@ import {
 } from './bookmarksSaveActionsTypes';
 import { ThunkAction } from 'redux-thunk';
 import { BookmarksSchema } from '../../schemas/bookmarkSchemas';
-import { saveBookmarkBlob } from '../../services/bookmarksBlobLoader';
-import { Queryer } from '../../services/bookmarkQueryer';
+import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
+import { DataOrNull } from '../../services/helpers';
 
 
 /**
@@ -18,10 +18,10 @@ import { Queryer } from '../../services/bookmarkQueryer';
  * @returns {(dispatch: Dispatch) => Promise<IHandleSaveSingleBlobAction>}
  * @constructor
  */
-export const SaveSingleBookmarkBlobActionCreator: ActionCreator<ThunkAction<Promise<THandleSavingBlobActions>, unknown, BookmarksSchema, THandleSavingBlobActions>>
+export const SaveSingleBookmarkBlob: ActionCreator<ThunkAction<Promise<THandleSavingBlobActions>, unknown, BookmarksSchema, THandleSavingBlobActions>>
     = ( bookmark: BookmarksSchema ) => async ( dispatch: Dispatch ) => {
     dispatch( SavingSingleBlobActionCreator() );
-    const isSuccess = await Queryer.saveOne( bookmark );
+    const isSuccess = await DataOrNull( Queryer.saveOne( bookmark ));
     if ( !isSuccess ) {
         return dispatch( HandleSaveSingleBlobActionCreator( true, undefined, 'Failed to save bookmark blob' ) );
     }
