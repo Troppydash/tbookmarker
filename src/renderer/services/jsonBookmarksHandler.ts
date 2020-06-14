@@ -1,9 +1,10 @@
 /// Manages the loading and saving of bookmarks
 
 import { BookmarkBlob, BookmarksSchema } from '../schemas/bookmarkSchemas';
-import { readFilesFromStorage, writeFileToStorage } from './storageHandlers';
+import { GetApplicationBookmarkStoragePath, readFilesFromStorage, writeFileToStorage } from './storageHandlers';
 
 import { v4 as uuidv4 } from 'uuid';
+import { makeBookmarkBlob } from '../schemas/bookmarksEmpty';
 
 /**
  * Async function to load all the bookmarks
@@ -66,6 +67,7 @@ export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null>
     const items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
+            // TODO: Change this to use the new method
             return {
                 uuid: uuidv4(),
                 title: filename.split( '.' )[0],
@@ -98,13 +100,38 @@ export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null>
  * @param targetBookmark
  * @returns {Promise<boolean>}
  */
-export async function saveBookmarkBlob( targetBookmark: BookmarksSchema ): Promise<boolean> {
+export async function saveBookmarkBlob( targetBookmark: BookmarksSchema ): Promise<BookmarkBlob | null> {
     const filename = `bookmark_${targetBookmark.createdAt}.json`;
 
     try {
         const strContent = JSON.stringify(targetBookmark);
-        return await writeFileToStorage(filename, strContent);
+        const success = await writeFileToStorage(filename, strContent);
+        if (success) {
+            let blob = makeBookmarkBlob();
+            blob.bookmarks = targetBookmark;
+            blob.title = filename.split('.')[0];
+            return blob;
+        } else {
+            return null;
+        }
     } catch ( e ) {
-        return false;
+        return null;
     }
 }
+
+export async function doesAnyBookmarksExist(): Promise<boolean> {
+    const allBookmarks = await loadAllBookmarksBlobs();
+    if (!allBookmarks || allBookmarks.length == 0) {
+        return false;
+    }
+
+    const length = allBookmarks.length;
+    let times = 0;
+    allBookmarks.forEach(bookmark => {
+        if (bookmark.bookmarks == null) {
+            times += 1;
+        }
+    })
+    return times != length;
+}
+

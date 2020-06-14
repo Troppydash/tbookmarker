@@ -12,6 +12,11 @@ import Commits from '../components/CommitsBundle/Commits';
 import Bookmarks from '../components/BookmarksBundle/Bookmarks';
 import { Queryer } from '../services/bookmarks/bookmarkQueryer';
 import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../schemas/bookmarkSchemas';
+import { CreateBranch, CreateSchema } from '../actions/create/bookmarksCreateActions';
+import { makeBookmarkBranch } from '../schemas/bookmarksEmpty';
+import { JSONUpdaterOptions } from '../services/bookmarks/bookmarkCreator';
+import { doesAnyBookmarksExist } from '../services/jsonBookmarksHandler';
+import _ from 'lodash';
 
 // Redux connector
 const mapStateToProps = ( state: RootState ) => ({
@@ -21,7 +26,9 @@ const mapStateToProps = ( state: RootState ) => ({
 const mapDispatchToProps = {
     LoadAllBlobs: LoadAllBlobs,
     LoadSingleBlob: LoadSingleBlob,
-    SaveBlob: SaveSingleBookmarkBlob
+    SaveBlob: SaveSingleBookmarkBlob,
+    AddBranch: CreateBranch,
+    AddSchema: CreateSchema
 };
 
 const connector = connect( mapStateToProps, mapDispatchToProps );
@@ -52,6 +59,12 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     };
 
     async componentDidMount(): Promise<void> {
+        const doesExist = await doesAnyBookmarksExist();
+        if ( !doesExist ) {
+            alert( 'Adding Schema' );
+            await this.props.AddSchema();
+        }
+
         await this.props.LoadSingleBlob();
         // Select the first group
         if ( !this.haveError() ) {
@@ -65,6 +78,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         }
     }
 
+    // start::Selection
     handleGroupSelect = ( groupID: string ) => {
         this.setState( {
             selectedGroupID: groupID,
@@ -78,7 +92,6 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             this.setBranches();
         } );
     };
-
     handleBranchSelect = ( branchID: string ) => {
         this.setState( {
             selectedBranchID: branchID,
@@ -90,7 +103,6 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             this.setCommits();
         } );
     };
-
     handleCommitSelect = ( commitID: string ) => {
         this.setState( {
             selectedCommitID: commitID,
@@ -100,35 +112,22 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             this.setBookmarks();
         } );
     };
-
     handleBookmarkSelect = ( bookmarkID: string ) => {
         this.setState( {
             selectedBookmarkID: bookmarkID
         } );
     };
-
-    handleUpdateBookmark = ( bookmarkID: string, url: string, title: string ) => {
-
-    };
-
-    // If error occurred
     haveError = () => {
         return !this.props.singleBlob.item || !this.props.singleBlob.item.bookmarks || this.props.singleBlob.hasError;
     };
-
-    // Get all branches
     setBranches = () => {
-        if ( this.haveError() ) {
+        const options = this.getOptions();
+        if ( options === null ) {
             return;
         }
 
         const { selectedBranchID, selectedGroupID, selectedBookmarkID, selectedCommitID } = this.state;
-        Queryer.selectBranches( selectedGroupID, {
-            groupID: selectedGroupID,
-            branchID: selectedBranchID,
-            commitID: selectedCommitID,
-            data: this.props.singleBlob.item!.bookmarks!
-        } )
+        Queryer.selectBranches( selectedGroupID, options )
             .then( branches => {
                 this.setState( {
                     branches
@@ -138,19 +137,14 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                 alert( err );
             } );
     };
-
     setCommits = () => {
-        if ( this.haveError() ) {
+        const options = this.getOptions();
+        if ( options === null ) {
             return;
         }
 
         const { selectedBranchID, selectedGroupID, selectedBookmarkID, selectedCommitID } = this.state;
-        Queryer.selectCommits( selectedBranchID, {
-            groupID: selectedGroupID,
-            branchID: selectedBranchID,
-            commitID: selectedCommitID,
-            data: this.props.singleBlob.item!.bookmarks!
-        } )
+        Queryer.selectCommits( selectedBranchID, options )
             .then( commits => {
                 this.setState( {
                     commits
@@ -160,19 +154,15 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                 alert( err );
             } );
     };
-
     setBookmarks = () => {
-        if ( this.haveError() ) {
+        const options = this.getOptions();
+        if ( options === null ) {
             return;
         }
 
         const { selectedBranchID, selectedGroupID, selectedBookmarkID, selectedCommitID } = this.state;
-        Queryer.selectBookmarks( selectedCommitID, {
-            groupID: selectedGroupID,
-            branchID: selectedBranchID,
-            commitID: selectedCommitID,
-            data: this.props.singleBlob.item!.bookmarks!
-        } )
+
+        Queryer.selectBookmarks( selectedCommitID, options)
             .then( bookmarks => {
                 this.setState( {
                     bookmarks
@@ -181,6 +171,36 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             .catch( err => {
                 alert( err );
             } );
+    };
+    // end::Selection
+
+    handleUpdateBookmark = ( bookmarkID: string, url: string, title: string ) => {
+
+    };
+
+    getOptions = () => {
+        if ( this.haveError() ) {
+            return null;
+        }
+        const { selectedBranchID, selectedGroupID, selectedBookmarkID, selectedCommitID } = this.state;
+        return {
+            groupID: selectedGroupID,
+            branchID: selectedBranchID,
+            commitID: selectedCommitID,
+            data: _.cloneDeep( this.props.singleBlob.item!.bookmarks! )
+        };
+    };
+
+    handleAddBranch = () => {
+        // TODO: Implement this
+        const newBranch = makeBookmarkBranch();
+        newBranch.name = 'Nice Branch';
+        newBranch.description = 'Very Nice Branch indeed.';
+
+        const options = this.getOptions();
+        if ( options !== null ) {
+            this.props.AddBranch( newBranch, options );
+        }
     };
 
     render() {
@@ -219,7 +239,8 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                                     {/*BranchesPane*/}
                                     <div className={Styles.branchesPane}>
                                         <Branches selectedBranch={selectedBranchID} branches={branches || []}
-                                                  selectBranch={this.handleBranchSelect} />
+                                                  selectBranch={this.handleBranchSelect}
+                                                  addBranch={this.handleAddBranch} />
                                     </div>
                                     {/*CommitsPane*/}
                                     <div className={Styles.commitsPane}>

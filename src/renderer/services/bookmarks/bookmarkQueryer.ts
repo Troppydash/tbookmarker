@@ -41,7 +41,7 @@ export interface BookmarkQueryer {
     selectMostRecent(): Promise<BookmarkBlob | null>;
 
     // Move this
-    saveOne( bookmark: BookmarksSchema ): Promise<boolean>;
+    // saveOne( bookmark: BookmarksSchema ): Promise<boolean>;
 
 
     /**
@@ -137,9 +137,9 @@ export class JSONQueryer implements BookmarkQueryer {
         return loadBookmarkBlobByDate( date );
     }
 
-    saveOne( bookmark: BookmarksSchema ): Promise<boolean> {
-        return saveBookmarkBlob( bookmark );
-    }
+    // saveOne( bookmark: BookmarksSchema ): Promise<boolean> {
+    //     return saveBookmarkBlob( bookmark );
+    // }
 
     selectBookmarkFromBookmarkID( bookmarkID: string, options?: JSONQueryerOptions ): Promise<BookmarkBookmarks | null> {
         return new Promise( async ( resolve, reject ) => {

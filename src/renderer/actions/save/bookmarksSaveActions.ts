@@ -21,8 +21,9 @@ import { DataOrNull } from '../../services/helpers';
 export const SaveSingleBookmarkBlob: ActionCreator<ThunkAction<Promise<THandleSavingBlobActions>, unknown, BookmarksSchema, THandleSavingBlobActions>>
     = ( bookmark: BookmarksSchema ) => async ( dispatch: Dispatch ) => {
     dispatch( SavingSingleBlobActionCreator() );
-    const isSuccess = await DataOrNull( Queryer.saveOne( bookmark ));
-    if ( !isSuccess ) {
+    // TODO: Fix this
+    // const isSuccess = await DataOrNull( Queryer.saveOne( bookmark ));
+    if ( true ) {
         return dispatch( HandleSaveSingleBlobActionCreator( true, undefined, 'Failed to save bookmark blob' ) );
     }
     dispatch( ClearSaveErrorActionCreator() );

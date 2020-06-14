@@ -1,4 +1,5 @@
 import {
+    BookmarkBlob,
     BookmarkBookmarks,
     BookmarkBranch,
     BookmarkCommit,
@@ -6,6 +7,7 @@ import {
     BookmarksSchema
 } from '../../schemas/bookmarkSchemas';
 import { saveBookmarkBlob } from '../jsonBookmarksHandler';
+import _ from 'lodash';
 
 // Additional JSON implementation options
 export interface JSONUpdaterOptions {
@@ -23,7 +25,7 @@ export interface BookmarkCreator {
     /**
      * Create a new Schema
      */
-    createSchema( newSchema: BookmarksSchema ): Promise<BookmarksSchema | null>;
+    createSchema( newSchema: BookmarksSchema ): Promise<BookmarkBlob | null>;
 
     /**
      * Create a new group
@@ -68,7 +70,7 @@ export class JSONCreator implements BookmarkCreator {
             if ( !options ) {
                 return reject( 'No options specified' );
             }
-            const newSchema = options.data;
+            const newSchema = _.cloneDeep(options.data);
             newSchema.data.push( newGroup );
             const success = await saveBookmarkBlob( newSchema );
 
@@ -85,7 +87,7 @@ export class JSONCreator implements BookmarkCreator {
             if ( !options ) {
                 return reject( 'No options specified' );
             }
-            const newSchema = options.data;
+            const newSchema = _.cloneDeep(options.data);
 
             const selectedGroup = newSchema.data.find( g => g.uuid === options.groupID );
             if ( !selectedGroup ) {
@@ -114,7 +116,7 @@ export class JSONCreator implements BookmarkCreator {
             if ( !options ) {
                 return reject( 'No options specified' );
             }
-            const newSchema = options.data;
+            const newSchema = _.cloneDeep(options.data);
 
             const selectedGroup = newSchema.data.find( g => g.uuid === options.groupID );
             if ( !selectedGroup ) {
@@ -149,7 +151,9 @@ export class JSONCreator implements BookmarkCreator {
             if ( !options ) {
                 return reject( 'No options specified' );
             }
-            const newSchema = options.data;
+
+            // TODO: Fix this
+            const newSchema = _.cloneDeep(options.data);
 
             const selectedGroup = newSchema.data.find( g => g.uuid === options.groupID );
             if ( !selectedGroup ) {
@@ -169,13 +173,13 @@ export class JSONCreator implements BookmarkCreator {
     }
 
 
-    createSchema( newSchema: BookmarksSchema ): Promise<BookmarksSchema | null> {
+    createSchema( newSchema: BookmarksSchema ): Promise<BookmarkBlob | null> {
         return new Promise( async ( resolve, reject ) => {
-            const success = await saveBookmarkBlob( newSchema );
-            if ( !success ) {
-                reject( 'Something went wrong creating the schema' );
+            const blob = await saveBookmarkBlob( newSchema );
+            if ( blob == null ) {
+                return reject( 'Something went wrong creating the schema' );
             } else {
-                resolve( newSchema );
+                return resolve( blob );
             }
         } );
     }

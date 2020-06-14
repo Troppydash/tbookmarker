@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import {
+    BookmarkBlob,
     BookmarkBookmarks,
     BookmarkBranch,
     BookmarkCommit,
@@ -15,9 +16,13 @@ export const CREATE_COMMIT = 'CREATE_COMMIT';
 export const CREATE_BOOKMARK = 'CREATE_BOOKMARK';
 export const CREATE_COMMIT_WITH_BOOKMARKS = 'CREATE_COMMIT_WITH_BOOKMARKS';
 
+export const HANDLE_CREATING = 'HANDLE_CREATING';
 export const HANDLE_CREATE = 'HANDLE_CREATE';
-
 export const CLEAR_CREATE_ERROR = 'CLEAR_CREATE_ERROR';
+
+export interface IHandleCreating extends Action {
+    type: 'HANDLE_CREATING'
+}
 
 export interface IClearCreateError extends Action {
     type: 'CLEAR_CREATE_ERROR'
@@ -26,7 +31,6 @@ export interface IClearCreateError extends Action {
 export interface IHandleCreate extends Action {
     type: 'HANDLE_CREATE',
     payload: {
-        successMessage?: string;
         hasError: boolean;
         reason?: string;
     }
@@ -35,7 +39,7 @@ export interface IHandleCreate extends Action {
 export interface ICreateSchema extends Action {
     type: 'CREATE_SCHEMA',
     payload: {
-        newSchema: BookmarksSchema
+        newSchema: BookmarkBlob
     }
 }
 
@@ -80,3 +84,12 @@ export interface ICreateCommitWithBookmarks extends Action {
     }
 }
 
+export type TBookmarkCreateItemTypes =
+    ICreateSchema
+    | ICreateGroup
+    | ICreateBookmark
+    | ICreateCommit
+    | ICreateBranch
+    | ICreateCommitWithBookmarks;
+
+export type TBookmarkCreateActionTypes = IHandleCreate | IClearCreateError | IHandleCreating;

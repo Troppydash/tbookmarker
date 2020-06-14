@@ -15,6 +15,9 @@ import {
 import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
 import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
 import { DataOrNull } from '../../services/helpers';
+import { doesAnyBookmarksExist } from '../../services/jsonBookmarksHandler';
+import { CreateSchema } from '../create/bookmarksCreateActions';
+import { IHandleCreate } from '../create/bookmarksCreateActionsTypes';
 
 
 /**
@@ -43,6 +46,7 @@ export const LoadSingleBlob: ActionCreator<ThunkAction<Promise<THandleLoadBlobAc
     = ( date?: number ) => async ( dispatch: Dispatch ) => {
 
     dispatch( LoadingSingleBlobActionCreator() );
+
     const bookmark: BookmarkBlob | null =
         date
             ? await DataOrNull( Queryer.selectOneByDate( date ) )

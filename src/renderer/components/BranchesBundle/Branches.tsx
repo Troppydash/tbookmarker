@@ -8,6 +8,7 @@ interface BranchesProps {
     branches: BookmarkBranch[];
     selectedBranch: string;
     selectBranch: ( branchID: string ) => void;
+    addBranch: () => void;
 }
 
 interface BranchesState {
@@ -41,6 +42,7 @@ class Branches extends Component<BranchesProps, BranchesState> {
             <div className={Styles.container}>
                 <div className={Styles.folderContainerTitle}>
                     <span>Branches</span>
+                    <button onClick={this.props.addBranch}>Add</button>
                 </div>
                 <Menu className={Styles.folderContainer}>
                     {
