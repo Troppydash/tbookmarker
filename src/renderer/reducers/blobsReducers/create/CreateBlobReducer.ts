@@ -34,7 +34,6 @@ export const CreateBlobReducer: Reducer<ICreateBlobState, TBookmarkCreateActionT
         case 'HANDLE_CREATE': {
             return {
                 ...state,
-                isLoading: false,
                 hasError: action.payload.hasError,
                 reason: action.payload.reason
             }

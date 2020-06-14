@@ -120,6 +120,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     haveError = () => {
         return !this.props.singleBlob.item || !this.props.singleBlob.item.bookmarks || this.props.singleBlob.hasError;
     };
+
     setBranches = () => {
         const options = this.getOptions();
         if ( options === null ) {
@@ -162,7 +163,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
         const { selectedBranchID, selectedGroupID, selectedBookmarkID, selectedCommitID } = this.state;
 
-        Queryer.selectBookmarks( selectedCommitID, options)
+        Queryer.selectBookmarks( selectedCommitID, options )
             .then( bookmarks => {
                 this.setState( {
                     bookmarks
@@ -191,7 +192,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         };
     };
 
-    handleAddBranch = () => {
+    handleAddBranch = async () => {
         // TODO: Implement this
         const newBranch = makeBookmarkBranch();
         newBranch.name = 'Nice Branch';
@@ -199,8 +200,9 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
         const options = this.getOptions();
         if ( options !== null ) {
-            this.props.AddBranch( newBranch, options );
+            await this.props.AddBranch( newBranch, options );
         }
+        await this.setBranches();
     };
 
     render() {

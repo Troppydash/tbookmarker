@@ -5,6 +5,7 @@ import {
     TBookmarkCreateActionTypes,
     TBookmarkCreateItemTypes
 } from '../../../actions/create/bookmarksCreateActionsTypes';
+import _ from 'lodash';
 
 export interface ISingleBlobsState {
     readonly hasError: boolean;
@@ -65,7 +66,7 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             }
 
             const { newGroup, options } = action.payload;
-            const newSchema = state.item;
+            const newSchema = _.cloneDeep( state.item );
             newSchema?.bookmarks?.data.push( { ...newGroup } );
             return {
                 ...state,
@@ -82,9 +83,10 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             }
 
             const { newBranch, options } = action.payload;
-            const newSchema = state.item;
+            const newSchema = _.cloneDeep( state.item );
             const selectedGroup = newSchema.bookmarks?.data.find( g => g.uuid == options.groupID );
-            selectedGroup?.branches.push( newBranch );
+            // TODO: Fix things like this
+            selectedGroup!.branches = [ ...selectedGroup!.branches, newBranch ];
             return {
                 ...state,
                 item: {
@@ -100,7 +102,7 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             }
 
             const { newCommit, options } = action.payload;
-            const newSchema = state.item;
+            const newSchema = _.cloneDeep( state.item );
             const selectedGroup = newSchema.bookmarks?.data.find( g => g.uuid == options.groupID );
             const selectedBranch = selectedGroup?.branches.find( b => b.uuid === options.branchID );
             selectedBranch?.commits.push( newCommit );
@@ -119,7 +121,7 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             }
 
             const { newBookmark, options } = action.payload;
-            const newSchema = state.item;
+            const newSchema = _.cloneDeep( state.item );
             const selectedGroup = newSchema.bookmarks?.data.find( g => g.uuid == options.groupID );
             const selectedBranch = selectedGroup?.branches.find( b => b.uuid === options.branchID );
             const selectedCommit = selectedBranch?.commits.find( c => c.uuid === options.commitID );
