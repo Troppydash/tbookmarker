@@ -1,0 +1,27 @@
+@import "ColorPalette";
+
+// App Theme Color
+$border-separator-background: $highest;
+
+$navbar-background: $high;
+$navbar-text: $low;
+
+$pane-header-background: $high;
+$pane-header-text: $lowest;
+
+$pane-items-background: $lowest;
+$pane-items-text: $highest;
+
+$pane-items-background__hovered: $low;
+$pane-items-text__hovered: $highest;
+
+$pane-items-background__selected: $medium;
+$pane-items-text__selected: $lowest;
+
+$pane-items-contextmenu-background: $lowest;
+
+$pane-items-contextmenu-items-background: $lowest;
+$pane-items-contextmenu-items-text: $highest;
+
+$pane-items-contextmenu-items-background__hovered: $low;
+$pane-items-contextmenu-items-text__hovered: $highest;

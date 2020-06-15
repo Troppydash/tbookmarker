@@ -1,4 +1,5 @@
-@import "./src/renderer/Styles/ColorPalette";
+@import "./src/renderer/Styles/AppTheme";
+@import "./src/renderer/Styles/Sizes";
 
 .container {
     background-color: $navbar-background;

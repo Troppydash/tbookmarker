@@ -21,6 +21,14 @@ const initialState: ISingleBlobsState = {
     isLoading: false
 };
 
+
+/**
+ * Reducer for loading a single blob
+ * @param state
+ * @param action
+ * @returns {{readonly isLoading: boolean; reason: undefined; readonly item: BookmarkBlob | null; hasError: boolean} | {isLoading: boolean; reason: string | undefined; item: BookmarkBlob | null; hasError: boolean} | {readonly isLoading: boolean; readonly reason?: string; item: {bookmarks: BookmarksSchema | null; title: string; uuid: string}; readonly hasError: boolean} | ISingleBlobsState | {isLoading: boolean; readonly reason?: string; readonly item: BookmarkBlob | null; readonly hasError: boolean}}
+ * @constructor
+ */
 export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions | TBookmarkCreateItemTypes> = (
     state = initialState,
     action

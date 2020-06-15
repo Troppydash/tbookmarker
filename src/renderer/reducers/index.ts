@@ -12,6 +12,9 @@ export interface RootState {
     createBlob: ICreateBlobState;
 }
 
+/**
+ * Root Reducer
+ */
 export const rootReducer = combineReducers<RootState | undefined>( {
     allBlobs: AllBlobsReducer,
     singleBlob: SingleBlobsReducer,

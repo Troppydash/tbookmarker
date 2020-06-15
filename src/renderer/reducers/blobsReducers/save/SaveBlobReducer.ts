@@ -15,6 +15,12 @@ const initialState: ISaveBlobState = {
     isLoading: false
 };
 
+/**
+ * Saving Blob Reducer
+ * @param state
+ * @param action
+ * @constructor
+ */
 export const SaveBlobReducer: Reducer<ISaveBlobState, TSaveBlobActions> = (
     state = initialState,
     action

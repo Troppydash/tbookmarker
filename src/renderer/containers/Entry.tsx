@@ -1,6 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import Topbar from './Topbar/Topbar';
+import Topbar from './TopbarBundle/Topbar';
 
 import './Entry.scss';
 

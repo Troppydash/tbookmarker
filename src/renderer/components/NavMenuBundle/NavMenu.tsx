@@ -1,11 +1,9 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { BookmarkBlob, BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../../schemas/bookmarkSchemas';
-import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
-import path from 'path';
+import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
 import { Breadcrumb, Breadcrumbs, IBreadcrumbProps, Icon } from '@blueprintjs/core';
-import { render } from 'react-dom';
+import { Queryer } from '../../services/bookmarks/exports';
 
 interface NavMenuProps {
     selectedBranchID: string;

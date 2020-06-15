@@ -8,8 +8,6 @@ import {
 } from './bookmarksSaveActionsTypes';
 import { ThunkAction } from 'redux-thunk';
 import { BookmarksSchema } from '../../schemas/bookmarkSchemas';
-import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
-import { DataOrNull } from '../../services/helpers';
 
 
 /**

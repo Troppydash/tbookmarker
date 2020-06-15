@@ -13,11 +13,8 @@ import {
     LOADING_SINGLE_BLOB
 } from './bookmarksLoadActionsTypes';
 import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
-import { Queryer } from '../../services/bookmarks/bookmarkQueryer';
-import { DataOrNull } from '../../services/helpers';
-import { doesAnyBookmarksExist } from '../../services/jsonBookmarksHandler';
-import { CreateSchema } from '../create/bookmarksCreateActions';
-import { IHandleCreate } from '../create/bookmarksCreateActionsTypes';
+import { DataOrNull } from '../../helpers/promiseHelpers';
+import { Queryer } from '../../services/bookmarks/exports';
 
 
 /**

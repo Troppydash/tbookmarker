@@ -1,10 +1,10 @@
 /// Manages the loading and saving of bookmarks
 
-import { BookmarkBlob, BookmarksSchema } from '../schemas/bookmarkSchemas';
-import { GetApplicationBookmarkStoragePath, readFilesFromStorage, writeFileToStorage } from './storageHandlers';
+import { BookmarkBlob, BookmarksSchema } from '../../../schemas/bookmarkSchemas';
+import { GetApplicationBookmarkStoragePath, readFilesFromStorage, writeFileToStorage } from '../../storage/storageHandlers';
 
 import { v4 as uuidv4 } from 'uuid';
-import { makeBookmarkBlob } from '../schemas/bookmarksEmpty';
+import { makeBookmarkBlob } from '../../../schemas/bookmarksEmpty';
 
 /**
  * Async function to load all the bookmarks
@@ -119,6 +119,10 @@ export async function saveBookmarkBlob( targetBookmark: BookmarksSchema ): Promi
     }
 }
 
+/**
+ * Returns a promise that contains a boolean indicting whether any json valid bookmark files exist in default storage
+ * @returns {Promise<boolean>}
+ */
 export async function doesAnyBookmarksExist(): Promise<boolean> {
     const allBookmarks = await loadAllBookmarksBlobs();
     if (!allBookmarks || allBookmarks.length == 0) {

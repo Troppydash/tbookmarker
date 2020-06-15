@@ -26,10 +26,17 @@ import {
     BookmarksSchema
 } from '../../schemas/bookmarkSchemas';
 import { ThunkAction } from 'redux-thunk';
-import { Creator, JSONUpdaterOptions } from '../../services/bookmarks/bookmarkCreator';
 import { makeBookmarkGroup, makeBookmarksSchema } from '../../schemas/bookmarksEmpty';
-import { DataOrError } from '../../services/helpers';
+import { DataOrError } from '../../helpers/promiseHelpers';
+import { Creator } from '../../services/bookmarks/exports';
+import { JSONUpdaterOptions } from '../../services/bookmarks/bookmarkCreator';
 
+
+/**
+ * Create a new empty schema
+ * @returns {(dispatch: Dispatch) => Promise<IHandleCreate>}
+ * @constructor
+ */
 export const CreateSchema: ActionCreator<ThunkAction<Promise<IHandleCreate>, unknown, null, IHandleCreate>>
     = () => async ( dispatch: Dispatch ) => {
 
@@ -55,6 +62,13 @@ export const CreateSchema: ActionCreator<ThunkAction<Promise<IHandleCreate>, unk
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
 
+/**
+ * Create a new branch
+ * @param newBranch
+ * @param options
+ * @returns {(dispatch: Dispatch) => Promise<IHandleCreate>}
+ * @constructor
+ */
 export const CreateBranch: ActionCreator<ThunkAction<Promise<IHandleCreate>, unknown, any, IHandleCreate>> = (
     newBranch: BookmarkBranch, options: JSONUpdaterOptions
 ) => async ( dispatch: Dispatch ) => {
@@ -78,6 +92,13 @@ export const CreateBranch: ActionCreator<ThunkAction<Promise<IHandleCreate>, unk
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
 
+/**
+ * Create a new group
+ * @param newGroup
+ * @param options
+ * @returns {(dispatch: Dispatch) => Promise<IHandleCreate>}
+ * @constructor
+ */
 export const CreateGroup: ActionCreator<ThunkAction<Promise<IHandleCreate>, unknown, any, IHandleCreate>> = (
     newGroup: BookmarkGroup, options: JSONUpdaterOptions
 ) => async ( dispatch: Dispatch ) => {
@@ -102,6 +123,13 @@ export const CreateGroup: ActionCreator<ThunkAction<Promise<IHandleCreate>, unkn
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
 
+/**
+ * Create a new commit
+ * @param newCommit
+ * @param options
+ * @returns {(dispatch: Dispatch) => Promise<IHandleCreate>}
+ * @constructor
+ */
 export const CreateCommit: ActionCreator<ThunkAction<Promise<IHandleCreate>, unknown, any, IHandleCreate>> = (
     newCommit: BookmarkCommit, options: JSONUpdaterOptions
 ) => async ( dispatch: Dispatch ) => {
@@ -125,6 +153,14 @@ export const CreateCommit: ActionCreator<ThunkAction<Promise<IHandleCreate>, unk
     // Stop loading
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
+
+/**
+ * Create a new bookmark
+ * @param newBookmark
+ * @param options
+ * @returns {(dispatch: Dispatch) => Promise<IHandleCreate>}
+ * @constructor
+ */
 export const CreateBookmark: ActionCreator<ThunkAction<Promise<IHandleCreate>, unknown, any, IHandleCreate>> = (
     newBookmark: BookmarkBookmarks, options: JSONUpdaterOptions
 ) => async ( dispatch: Dispatch ) => {
@@ -146,6 +182,23 @@ export const CreateBookmark: ActionCreator<ThunkAction<Promise<IHandleCreate>, u
     dispatch( CreateBookmarkActionCreator( data, options ) );
 
     // Stop loading
+    return dispatch( HandleCreateActionCreator( false, undefined ) );
+};
+
+//TODO: Create commit with bookmark actioncreator
+/**
+ * Create a commit with multiple bookmarks
+ * @param newCommit
+ * @param bookmarks
+ * @param options
+ * @returns {(dispatch: Dispatch) => Promise<IHandleCreate>}
+ * @constructor
+ */
+export const CreateCommitWithBookmarks: ActionCreator<ThunkAction<Promise<IHandleCreate>, unknown, any, IHandleCreate>> = (
+    newCommit: BookmarkCommit,
+    bookmarks: BookmarkBookmarks[],
+    options: JSONUpdaterOptions
+) => async ( dispatch: Dispatch ) => {
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
 

@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { GetCurrentDate } from '../services/helpers';
 import {
     BookmarkBlob,
     BookmarkBookmarks,
@@ -8,6 +7,7 @@ import {
     BookmarkCommit, BookmarkGroup,
     BookmarkMergedWith, BookmarksSchema
 } from './bookmarkSchemas';
+import { GetCurrentDate } from '../helpers/promiseHelpers';
 
 /**
  * Create an empty bookmark

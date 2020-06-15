@@ -5,7 +5,6 @@ import {
     BookmarkBranch,
     BookmarkCommit,
     BookmarkGroup,
-    BookmarksSchema
 } from '../../schemas/bookmarkSchemas';
 import { JSONUpdaterOptions } from '../../services/bookmarks/bookmarkCreator';
 

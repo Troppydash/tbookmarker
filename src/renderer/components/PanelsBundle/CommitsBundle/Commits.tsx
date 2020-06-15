@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { BookmarkBranch, BookmarkCommit } from '../../schemas/bookmarkSchemas';
+import { BookmarkBranch, BookmarkCommit } from '../../../schemas/bookmarkSchemas';
 
 import Styles from './Commits.module.scss';
 import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';

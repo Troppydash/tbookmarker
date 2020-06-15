@@ -7,16 +7,15 @@ import { LoadAllBlobs, LoadSingleBlob } from '../actions/load/bookmarksLoadActio
 import { SaveSingleBookmarkBlob } from '../actions/save/bookmarksSaveActions';
 import { connect, ConnectedProps } from 'react-redux';
 import NavMenu from '../components/NavMenuBundle/NavMenu';
-import Branches from '../components/BranchesBundle/Branches';
-import Commits from '../components/CommitsBundle/Commits';
-import Bookmarks from '../components/BookmarksBundle/Bookmarks';
-import { Queryer } from '../services/bookmarks/bookmarkQueryer';
+import Branches from '../components/PanelsBundle/BranchesBundle/Branches';
+import Commits from '../components/PanelsBundle/CommitsBundle/Commits';
+import Bookmarks from '../components/PanelsBundle/BookmarksBundle/Bookmarks';
 import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../schemas/bookmarkSchemas';
 import { CreateBranch, CreateSchema } from '../actions/create/bookmarksCreateActions';
 import { makeBookmarkBranch } from '../schemas/bookmarksEmpty';
-import { JSONUpdaterOptions } from '../services/bookmarks/bookmarkCreator';
-import { doesAnyBookmarksExist } from '../services/jsonBookmarksHandler';
 import _ from 'lodash';
+import { Queryer } from '../services/bookmarks/exports';
+import { doesAnyBookmarksExist } from '../services/bookmarks/json/jsonBookmarksHelpers';
 
 // Redux connector
 const mapStateToProps = ( state: RootState ) => ({
@@ -45,7 +44,9 @@ interface ExplorerState {
     bookmarks: BookmarkBookmarks[] | null;
 }
 
-// Container to handle the explorer elements
+/**
+ * Main Explorer Renderer
+ */
 class Explorer extends Component<PropsFromRedux, ExplorerState> {
     state = {
         selectedBookmarkID: '',

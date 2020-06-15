@@ -13,6 +13,13 @@ const initialState: ICreateBlobState = {
     isLoading: false
 };
 
+/**
+ * Reducer for creating a blob
+ * @param state
+ * @param action
+ * @returns {{readonly isLoading: boolean; reason: undefined; hasError: boolean} | {readonly isLoading: boolean; reason: string | undefined; hasError: boolean} | ICreateBlobState | {isLoading: boolean; readonly reason?: string; readonly hasError: boolean}}
+ * @constructor
+ */
 export const CreateBlobReducer: Reducer<ICreateBlobState, TBookmarkCreateActionTypes> = (
     state = initialState,
     action
