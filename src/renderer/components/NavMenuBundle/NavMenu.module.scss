@@ -11,24 +11,38 @@
     align-items: center;
     justify-content: flex-start;
 
-    padding: $padding-medium;
+    padding: 0 $padding-medium;
 
     height: 100%;
     width: 100%;
-}
 
-.containerHeading {
     font-size: $font-medium;
 }
 
-.breadcrumbsContainer {
-    width: 100%;
-    li > a {
-        color: $navbar-text
+.breadcrumbItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > * {
+        display: flex;
+        align-items: center;
+
+        margin-right: 0.2rem;
     }
-    li:after {
-        background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z' fill='%23ffffff'/%3e%3c/svg%3e") !important;
+
+    &:hover {
+        color: $lowest;
+        transform: scale(1.05);
+        transition-duration: 100ms;
+
+        cursor: pointer;
+        user-select: none;
     }
+}
+
+.breadcrumbSep {
+    margin: 0 0.3rem;
 }
 
 

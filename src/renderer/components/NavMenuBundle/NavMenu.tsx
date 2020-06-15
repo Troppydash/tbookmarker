@@ -2,8 +2,10 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
-import { Breadcrumb, Breadcrumbs, IBreadcrumbProps, Icon } from '@blueprintjs/core';
+// import { Breadcrumb, Breadcrumbs, IBreadcrumbProps, Icon } from '@blueprintjs/core';
 import { Queryer } from '../../services/bookmarks/exports';
+import { Breadcrumb } from 'antd';
+import { Icon } from '@blueprintjs/core';
 
 interface NavMenuProps {
     selectedBranchID: string;
@@ -19,9 +21,15 @@ interface NavMenuProps {
     selectBookmark: ( bookmarkID: string ) => void;
 }
 
+interface NavMenuBreadcrumbItem {
+    text: string;
+    icon: string;
+    onClick: () => void;
+}
+
 function NavMenu( props: NavMenuProps ) {
 
-    const [ menuPath, setMenuPath ] = useState<IBreadcrumbProps[]>( [] );
+    const [ menuPath, setMenuPath ] = useState<NavMenuBreadcrumbItem[]>( [] );
 
     useEffect( () => {
         currentPath()
@@ -33,7 +41,7 @@ function NavMenu( props: NavMenuProps ) {
     const currentPath = async () => {
         const { data, selectedGroupID, selectedBranchID, selectedCommitID, selectedBookmarkID } = props;
         const { selectBranch, selectGroup, selectBookmark, selectCommit } = props;
-        const result: IBreadcrumbProps[] = [];
+        const result: NavMenuBreadcrumbItem[] = [];
 
         if ( !data || !data.bookmarks ) {
             return result;
@@ -86,20 +94,27 @@ function NavMenu( props: NavMenuProps ) {
         return result;
     };
 
-    // TODO: Add Search Function
-    const renderCurrentBreadcrumb = ( { text, icon, ...restProps }: IBreadcrumbProps ) => {
-        return <Breadcrumb className={Styles.containerHeading} {...restProps}><Icon icon={icon} />{text}</Breadcrumb>;
-    };
-
     return (
         <div className={Styles.container}>
-            <Breadcrumbs currentBreadcrumbRenderer={renderCurrentBreadcrumb}
-                         collapseFrom={'start'}
-                         className={Styles.breadcrumbsContainer}
-                         items={menuPath}
-            popoverProps={{
-                className: 'bp3-dark'
-            }}/>
+            {
+                menuPath.map( ( item, index ) => {
+                    return (
+                        <>
+                            {
+                                index !== 0 && (
+                                    <div className={Styles.breadcrumbSep}>
+                                        <span>/</span>
+                                    </div>
+                                )
+                            }
+                            <div className={`${Styles.breadcrumbItem}`} onClick={item.onClick}>
+                                <Icon icon={item.icon as any}/>
+                                <span>{item.text}</span>
+                            </div>
+                        </>
+                    );
+                } )
+            }
         </div>
     );
 }
