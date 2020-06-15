@@ -75,7 +75,7 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
 
             const { newGroup, options } = action.payload;
             const newSchema = _.cloneDeep( state.item );
-            newSchema?.bookmarks?.data.push( { ...newGroup } );
+            newSchema!.bookmarks!.data = [ ...newSchema!.bookmarks!.data, newGroup ];
             return {
                 ...state,
                 item: {
@@ -93,7 +93,6 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             const { newBranch, options } = action.payload;
             const newSchema = _.cloneDeep( state.item );
             const selectedGroup = newSchema.bookmarks?.data.find( g => g.uuid == options.groupID );
-            // TODO: Fix things like this
             selectedGroup!.branches = [ ...selectedGroup!.branches, newBranch ];
             return {
                 ...state,
@@ -113,7 +112,7 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             const newSchema = _.cloneDeep( state.item );
             const selectedGroup = newSchema.bookmarks?.data.find( g => g.uuid == options.groupID );
             const selectedBranch = selectedGroup?.branches.find( b => b.uuid === options.branchID );
-            selectedBranch?.commits.push( newCommit );
+            selectedBranch!.commits = [ ...selectedBranch!.commits, newCommit ];
             return {
                 ...state,
                 item: {
@@ -133,18 +132,14 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             const selectedGroup = newSchema.bookmarks?.data.find( g => g.uuid == options.groupID );
             const selectedBranch = selectedGroup?.branches.find( b => b.uuid === options.branchID );
             const selectedCommit = selectedBranch?.commits.find( c => c.uuid === options.commitID );
-            selectedCommit?.bookmarks.push( newBookmark );
+
+            selectedCommit!.bookmarks = [ ...selectedCommit!.bookmarks, newBookmark ];
             return {
                 ...state,
                 item: {
                     ...newSchema
                 }
             };
-        }
-
-        // TODO: Implement this
-        case 'CREATE_COMMIT_WITH_BOOKMARKS': {
-            return state;
         }
 
 

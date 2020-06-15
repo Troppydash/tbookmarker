@@ -103,7 +103,6 @@ export class JSONCreator implements BookmarkCreator {
                 return reject( 'No options specified' );
             }
 
-            // TODO: Fix this
             const newSchema = _.cloneDeep(options.data);
 
             const selectedGroup = newSchema.data.find( g => g.uuid === options.groupID );

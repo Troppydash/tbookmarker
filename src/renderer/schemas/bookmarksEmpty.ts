@@ -9,6 +9,8 @@ import {
 } from './bookmarkSchemas';
 import { GetCurrentDate } from '../helpers/promiseHelpers';
 
+/// DEPRECATED ///
+
 /**
  * Create an empty bookmark
  * @returns {{uuid: string ; url: string}}
@@ -111,3 +113,5 @@ export function makeBookmarkBlob(): BookmarkBlob {
         bookmarks: null
     };
 }
+
+

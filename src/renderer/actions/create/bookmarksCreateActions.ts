@@ -4,7 +4,6 @@ import {
     CREATE_BOOKMARK,
     CREATE_BRANCH,
     CREATE_COMMIT,
-    CREATE_COMMIT_WITH_BOOKMARKS,
     CREATE_GROUP,
     CREATE_SCHEMA,
     HANDLE_CREATE, HANDLE_CREATING,
@@ -12,7 +11,6 @@ import {
     ICreateBookmark,
     ICreateBranch,
     ICreateCommit,
-    ICreateCommitWithBookmarks,
     ICreateGroup,
     ICreateSchema,
     IHandleCreate, IHandleCreating
@@ -185,7 +183,6 @@ export const CreateBookmark: ActionCreator<ThunkAction<Promise<IHandleCreate>, u
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
 
-//TODO: Create commit with bookmark actioncreator
 /**
  * Create a commit with multiple bookmarks
  * @param newCommit
@@ -199,6 +196,27 @@ export const CreateCommitWithBookmarks: ActionCreator<ThunkAction<Promise<IHandl
     bookmarks: BookmarkBookmarks[],
     options: JSONUpdaterOptions
 ) => async ( dispatch: Dispatch ) => {
+    // Set Loading
+    dispatch( HandleCreatingActionCreator() );
+
+    // Attach the bookmarks
+    newCommit.bookmarks = bookmarks;
+
+    // Create Schema
+    const { data, error } = await DataOrError( Creator.createCommit( newCommit, options ) );
+
+    // Error Handling
+    if ( error !== null ) {
+        // Stop loading
+        return dispatch( HandleCreateActionCreator( true, error ) );
+    }
+    // Clear Error
+    dispatch( ClearCreateErrorActionCreator() );
+
+    // Cross Reducer Sending
+    dispatch( CreateCommitActionCreator( data, options ) );
+
+    // Stop loading
     return dispatch( HandleCreateActionCreator( false, undefined ) );
 };
 
@@ -255,20 +273,6 @@ export const CreateGroupActionCreator: ActionCreator<ICreateGroup> = (
         options
     }
 });
-
-export const CreateCommitWithBookmarksActionCreator: ActionCreator<ICreateCommitWithBookmarks> = (
-    newCommit: BookmarkCommit,
-    bookmarks: BookmarkBookmarks[],
-    options: JSONUpdaterOptions
-) => ({
-    type: CREATE_COMMIT_WITH_BOOKMARKS,
-    payload: {
-        newCommit,
-        bookmarks,
-        options
-    }
-});
-
 
 export const HandleCreateActionCreator: ActionCreator<IHandleCreate> = (
     hasError: boolean, reason?: string

@@ -1,10 +1,11 @@
 /// Manages the loading and saving of bookmarks
 
 import { BookmarkBlob, BookmarksSchema } from '../../../schemas/bookmarkSchemas';
-import { GetApplicationBookmarkStoragePath, readFilesFromStorage, writeFileToStorage } from '../../storage/storageHandlers';
+import { readFilesFromStorage, writeFileToStorage } from '../../storage/storageHandlers';
 
 import { v4 as uuidv4 } from 'uuid';
 import { makeBookmarkBlob } from '../../../schemas/bookmarksEmpty';
+import { BookmarkBlobBuilder } from '../../../schemas/bookmarksBuilders';
 
 /**
  * Async function to load all the bookmarks
@@ -14,17 +15,15 @@ export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
     return await readFilesFromStorage<BookmarkBlob>(( filename, content ) => {
         try {
             const bookmark = JSON.parse( content );
-            return {
-                uuid: uuidv4(),
-                title: filename.split( '.' )[0],
-                bookmarks: bookmark
-            };
+            return new BookmarkBlobBuilder()
+                .title(filename.split('.')[0])
+                .bookmarks(bookmark)
+                .build();
         } catch ( e ) {
-            return {
-                uuid: uuidv4(),
-                title: filename.split('.')[0],
-                bookmarks: null
-            };
+            return new BookmarkBlobBuilder()
+                .title(filename.split('.')[0])
+                .bookmarks(null)
+                .build();
         }
     } );
 }
@@ -38,17 +37,15 @@ export async function loadBookmarkBlobByDate(date: number): Promise<BookmarkBlob
     let items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
-            return {
-                uuid: uuidv4(),
-                title: filename.split( '.' )[0],
-                bookmarks: bookmark
-            };
+            return new BookmarkBlobBuilder()
+                .title(filename.split('.')[0])
+                .bookmarks(bookmark)
+                .build();
         } catch ( e ) {
-            return {
-                uuid: uuidv4(),
-                title: filename.split('.')[0],
-                bookmarks: null
-            };
+            return new BookmarkBlobBuilder()
+                .title(filename.split('.')[0])
+                .bookmarks(null)
+                .build();
         }
     } );
 
@@ -67,18 +64,15 @@ export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null>
     const items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
-            // TODO: Change this to use the new method
-            return {
-                uuid: uuidv4(),
-                title: filename.split( '.' )[0],
-                bookmarks: bookmark
-            };
+            return new BookmarkBlobBuilder()
+                .title( filename.split( '.' )[0] )
+                .bookmarks( bookmark )
+                .build();
         } catch ( e ) {
-            return {
-                uuid: uuidv4(),
-                title: filename.split('.')[0],
-                bookmarks: null
-            };
+            return new BookmarkBlobBuilder()
+                .title(filename.split('.')[0])
+                .bookmarks(null)
+                .build();
         }
     } );
 
@@ -107,10 +101,10 @@ export async function saveBookmarkBlob( targetBookmark: BookmarksSchema ): Promi
         const strContent = JSON.stringify(targetBookmark);
         const success = await writeFileToStorage(filename, strContent);
         if (success) {
-            let blob = makeBookmarkBlob();
-            blob.bookmarks = targetBookmark;
-            blob.title = filename.split('.')[0];
-            return blob;
+            return new BookmarkBlobBuilder()
+                .bookmarks(targetBookmark)
+                .title(filename.split('.')[0])
+                .build();
         } else {
             return null;
         }

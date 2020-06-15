@@ -13,7 +13,6 @@ export const CREATE_GROUP = 'CREATE_GROUP';
 export const CREATE_BRANCH = 'CREATE_BRANCH';
 export const CREATE_COMMIT = 'CREATE_COMMIT';
 export const CREATE_BOOKMARK = 'CREATE_BOOKMARK';
-export const CREATE_COMMIT_WITH_BOOKMARKS = 'CREATE_COMMIT_WITH_BOOKMARKS';
 
 export const HANDLE_CREATING = 'HANDLE_CREATING';
 export const HANDLE_CREATE = 'HANDLE_CREATE';
@@ -74,21 +73,11 @@ export interface ICreateBookmark extends Action {
     }
 }
 
-export interface ICreateCommitWithBookmarks extends Action {
-    type: 'CREATE_COMMIT_WITH_BOOKMARKS',
-    payload: {
-        newCommit: BookmarkCommit,
-        bookmarks: BookmarkBookmarks[],
-        options: JSONUpdaterOptions
-    }
-}
-
 export type TBookmarkCreateItemTypes =
     ICreateSchema
     | ICreateGroup
     | ICreateBookmark
     | ICreateCommit
-    | ICreateBranch
-    | ICreateCommitWithBookmarks;
+    | ICreateBranch;
 
 export type TBookmarkCreateActionTypes = IHandleCreate | IClearCreateError | IHandleCreating;
