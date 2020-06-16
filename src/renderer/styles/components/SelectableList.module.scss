@@ -1,0 +1,31 @@
+@import "../AppTheme";
+@import "../Sizes";
+
+.selectableListContainer {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    list-style: none;
+    font-size: $font-medium;
+}
+
+.selectableListItem {
+    width: 100%;
+    padding: $padding-small;
+
+    background-color: $pane-items-background;
+    color: $pane-items-text;
+
+    cursor: pointer;
+
+    &:hover:not(.selectableListItem__selected) {
+        background-color: $pane-items-background__hovered;
+        color: $pane-items-text__hovered;
+    }
+}
+
+.selectableListItem__selected {
+    background-color: $pane-items-background__selected;
+    color: $pane-items-text__selected;
+}

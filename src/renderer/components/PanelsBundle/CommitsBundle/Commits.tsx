@@ -3,6 +3,11 @@ import { BookmarkBranch, BookmarkCommit } from '../../../schemas/bookmarkSchemas
 
 import Styles from './Commits.module.scss';
 import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';
+import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons/lib';
+import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
+import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/all';
 
 interface CommitsProps {
     commits: BookmarkCommit[];
@@ -14,7 +19,6 @@ interface CommitsState {
 
 }
 
-@ContextMenuTarget
 class Commits extends Component<CommitsProps, CommitsState> {
     state = {};
 
@@ -22,11 +26,21 @@ class Commits extends Component<CommitsProps, CommitsState> {
         this.props.selectCommit( uuid );
     };
 
-    renderContextMenu = () => {
+    createContextMenu = (commitID: string) => {
         return (
-            <Menu className={Styles.contextMenu}>
-                <MenuItem className={Styles.contextMenuItems} text="Delete" />
-            </Menu>
+            <ul className={ContextMenuStyles.contextMenu}>
+                <li className={ContextMenuStyles.contextMenuItems}>
+                    <span>{commitID}</span>
+                </li>
+                <li className={ContextMenuStyles.contextMenuItems}>
+                    <AiOutlineEdit />
+                    <span>Rename</span>
+                </li>
+                <li className={ContextMenuStyles.contextMenuItems}>
+                    <AiOutlineDelete />
+                    <span>Delete</span>
+                </li>
+            </ul>
         );
     };
 
@@ -35,23 +49,27 @@ class Commits extends Component<CommitsProps, CommitsState> {
 
         return (
             <div className={Styles.container}>
-                <div className={Styles.folderContainerTitle}>
+                <div className={Styles.folderTitle}>
                     <span>Commits</span>
                 </div>
-                <Menu className={Styles.folderContainer}>
+                <ul className={SelectableListStyles.selectableListContainer}>
                     {
                         commits.map( commit => {
                             return (
-                                <MenuItem key={commit.uuid}
-                                          className={
-                                              `${Styles.folderItem} ${selectedCommit === commit.uuid && Styles.folderItemSelected}`
-                                          }
-                                          onClick={() => this.handleClick( commit.uuid )}
-                                          text={commit.title} />
+                                <MakeContextMenu id={commit.uuid}
+                                                 key={commit.uuid}
+                                                 contextMenu={this.createContextMenu(commit.uuid)}>
+                                    <li className={
+                                        `${SelectableListStyles.selectableListItem} ${selectedCommit === commit.uuid && SelectableListStyles.selectableListItem__selected}`
+                                    }
+                                        onClick={() => this.handleClick( commit.uuid )}>
+                                        {commit.title}
+                                    </li>
+                                </MakeContextMenu>
                             );
                         } )
                     }
-                </Menu>
+                </ul>
             </div>
         );
     }

@@ -34,31 +34,6 @@ module.exports = merge.smart(baseConfig , {
                 }
             } ,
             {
-                test: /\.less$/ ,
-                use: [
-                    { loader: 'style-loader' } ,
-                    { loader: 'css-loader' } ,
-                    {
-                        loader: 'less-loader' ,
-                        options: {
-                            lessOptions: {
-                                modifyVars: {
-                                    'primary-color': '#F7F0F5' ,
-                                    'link-color': '#F7F0F5' ,
-                                    'text-color': '#F7F0F5' ,
-                                    'text-color-secondary': '#F7F0F5'
-                                    // 'primary-color': '#8F857D' ,
-                                    // 'link-color': '#DECBB7' ,
-                                    // 'text-color': '#F7F0F5' ,
-                                    // 'text-color-secondary': '#DECBB7'
-                                } ,
-                                javascriptEnabled: true
-                            }
-                        }
-                    }
-                ]
-            } ,
-            {
                 test: /\.scss$/ ,
                 use: [
                     { loader: 'style-loader' } ,

@@ -2,10 +2,11 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
+import BreadcrumbStyles from '../../styles/components/Breadcrumb.module.scss';
 // import { Breadcrumb, Breadcrumbs, IBreadcrumbProps, Icon } from '@blueprintjs/core';
 import { Queryer } from '../../services/bookmarks/exports';
-import { Breadcrumb } from 'antd';
-import { Icon } from '@blueprintjs/core';
+import { AiOutlineHome, BsFillBookmarkFill, FiGitBranch, FiGitCommit } from 'react-icons/all';
+import { IconType } from 'react-icons';
 
 interface NavMenuProps {
     selectedBranchID: string;
@@ -23,7 +24,7 @@ interface NavMenuProps {
 
 interface NavMenuBreadcrumbItem {
     text: string;
-    icon: string;
+    icon: IconType;
     onClick: () => void;
 }
 
@@ -32,13 +33,13 @@ function NavMenu( props: NavMenuProps ) {
     const [ menuPath, setMenuPath ] = useState<NavMenuBreadcrumbItem[]>( [] );
 
     useEffect( () => {
-        currentPath()
+        getCurrentPath()
             .then( newPath => {
                 setMenuPath( newPath );
             } );
     }, [ props ] );
 
-    const currentPath = async () => {
+    const getCurrentPath = async () => {
         const { data, selectedGroupID, selectedBranchID, selectedCommitID, selectedBookmarkID } = props;
         const { selectBranch, selectGroup, selectBookmark, selectCommit } = props;
         const result: NavMenuBreadcrumbItem[] = [];
@@ -59,7 +60,7 @@ function NavMenu( props: NavMenuProps ) {
 
             result.push( {
                 text: group ? group.name : selectedGroupID,
-                icon: 'git-commit',
+                icon: AiOutlineHome,
                 onClick: () => selectGroup( selectedGroupID )
             } );
 
@@ -67,7 +68,7 @@ function NavMenu( props: NavMenuProps ) {
                 const branch = await Queryer.selectBranchFromBranchID( selectedBranchID, options );
                 result.push( {
                     text: branch ? branch.name : selectedBranchID,
-                    icon: 'git-branch',
+                    icon: FiGitBranch,
                     onClick: () => selectBranch( selectedBranchID )
                 } );
 
@@ -75,7 +76,7 @@ function NavMenu( props: NavMenuProps ) {
                     const commit = await Queryer.selectCommitFromCommitID( selectedCommitID, options );
                     result.push( {
                         text: commit ? commit.title : selectedCommitID,
-                        icon: 'git-commit',
+                        icon: FiGitCommit,
                         onClick: () => selectCommit( selectedCommitID )
                     } );
 
@@ -83,7 +84,7 @@ function NavMenu( props: NavMenuProps ) {
                         const bookmark = await Queryer.selectBookmarkFromBookmarkID( selectedBookmarkID, options );
                         result.push( {
                             text: bookmark ? bookmark.url : selectedBookmarkID,
-                            icon: 'bookmark',
+                            icon: BsFillBookmarkFill,
                             onClick: () => selectBookmark( selectedBookmarkID )
                         } );
                     }
@@ -96,25 +97,32 @@ function NavMenu( props: NavMenuProps ) {
 
     return (
         <div className={Styles.container}>
-            {
-                menuPath.map( ( item, index ) => {
-                    return (
-                        <>
-                            {
-                                index !== 0 && (
-                                    <div className={Styles.breadcrumbSep}>
-                                        <span>/</span>
+            <div className={BreadcrumbStyles.breadcrumbContainer}>
+                {
+                    menuPath.map( ( item, index ) => {
+                        return (
+                            <Fragment key={index}>
+                                {
+                                    index !== 0 && (
+                                        <div className={BreadcrumbStyles.breadcrumbSeparator}>
+                                            <span>/</span>
+                                        </div>
+                                    )
+                                }
+                                <div className={BreadcrumbStyles.breadcrumbItem}
+                                     onClick={item.onClick}>
+                                    <div className={BreadcrumbStyles.breadcrumbIcon}>
+                                        <item.icon />
                                     </div>
-                                )
-                            }
-                            <div className={`${Styles.breadcrumbItem}`} onClick={item.onClick}>
-                                <Icon icon={item.icon as any}/>
-                                <span>{item.text}</span>
-                            </div>
-                        </>
-                    );
-                } )
-            }
+                                    <div className={BreadcrumbStyles.breadcrumbText}>
+                                        <span>{item.text}</span>
+                                    </div>
+                                </div>
+                            </Fragment>
+                        );
+                    } )
+                }
+            </div>
         </div>
     );
 }

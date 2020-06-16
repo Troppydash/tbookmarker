@@ -1,49 +1,13 @@
-@import "./src/renderer/Styles/AppTheme";
-@import "./src/renderer/Styles/Sizes";
+@import "../../styles/AppTheme";
+@import "../../styles/Sizes";
 
 .container {
     background-color: $navbar-background;
-
     border-bottom: 1px solid $border-separator-background;
-    color: $navbar-text;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
 
     padding: 0 $padding-medium;
-
-    height: 100%;
     width: 100%;
-
-    font-size: $font-medium;
+    height: 100%;
 }
-
-.breadcrumbItem {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    & > * {
-        display: flex;
-        align-items: center;
-
-        margin-right: 0.2rem;
-    }
-
-    &:hover {
-        color: $lowest;
-        transform: scale(1.05);
-        transition-duration: 100ms;
-
-        cursor: pointer;
-        user-select: none;
-    }
-}
-
-.breadcrumbSep {
-    margin: 0 0.3rem;
-}
-
 
 

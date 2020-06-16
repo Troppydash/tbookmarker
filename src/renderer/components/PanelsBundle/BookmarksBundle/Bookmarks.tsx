@@ -3,6 +3,11 @@ import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../../../sche
 
 import Styles from './Bookmarks.module.scss';
 import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';
+import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons/lib';
+import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
+import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/all';
 
 interface BookmarksProps {
     bookmarks: BookmarkBookmarks[];
@@ -13,20 +18,11 @@ interface BookmarksProps {
 interface BookmarksState {
 }
 
-@ContextMenuTarget
 class Bookmarks extends Component<BookmarksProps, BookmarksState> {
     state = {};
 
     handleClick = ( uuid: string ) => {
         this.props.selectBookmark( uuid );
-    };
-
-    renderContextMenu = () => {
-        return (
-            <Menu className={Styles.contextMenu}>
-                <MenuItem className={Styles.contextMenuItems} text="Delete" />
-            </Menu>
-        );
     };
 
     getFavicon = ( document: any ) => {
@@ -41,53 +37,62 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
     };
 
     fetchWebsites = () => {
-        this.props.bookmarks.forEach( bookmark => {
-            if (bookmark.title) {
-                return;
-            }
-            fetch( `https://cors-anywhere.herokuapp.com/${bookmark.url}` )
-                .then( res => {
-                    return res.text();
-                } )
-                .then( text => {
-                    const parser = new DOMParser();
-                    const html = parser.parseFromString( text, 'text/html' );
-                    const title = (html.getElementsByTagName( 'title' ) as any)[0].innerText;
-                } );
-        } );
+        // TODO: Update website titles
     };
 
     componentDidUpdate( prevProps: Readonly<BookmarksProps>, prevState: Readonly<BookmarksState>, snapshot?: any ): void {
         if ( prevProps.bookmarks !== this.props.bookmarks && this.props.bookmarks.length > 0 ) {
             this.fetchWebsites();
         }
-
     }
+
+    createContextMenu = (branchID: string) => {
+        return (
+            <ul className={ContextMenuStyles.contextMenu}>
+                <li className={ContextMenuStyles.contextMenuItems}>
+                    <span>{branchID}</span>
+                </li>
+                <li className={ContextMenuStyles.contextMenuItems}>
+                    <AiOutlineEdit />
+                    <span>Rename</span>
+                </li>
+                <li className={ContextMenuStyles.contextMenuItems}>
+                    <AiOutlineDelete />
+                    <span>Delete</span>
+                </li>
+            </ul>
+        );
+    };
 
     render() {
         const { bookmarks, selectedBookmark } = this.props;
 
         return (
             <div className={Styles.container}>
-                <div className={Styles.folderContainerTitle}>
+                <div className={Styles.folderTitle}>
                     <span>Bookmarks</span>
                 </div>
-                <Menu className={Styles.folderContainer}>
+
+                <ul className={SelectableListStyles.selectableListContainer}>
                     {
                         bookmarks.map( bookmark => {
                             return (
-                                <MenuItem key={bookmark.uuid}
-                                          className={
-                                              `${Styles.folderItem} ${selectedBookmark === bookmark.uuid && Styles.folderItemSelected}`
-                                          }
-                                          onClick={() => this.handleClick( bookmark.uuid )}
-                                          icon={<img alt='Icon'
-                                                     src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${bookmark.url}`} />}
-                                          text={bookmark.url} />
+                                <MakeContextMenu id={bookmark.uuid}
+                                                 key={bookmark.uuid}
+                                                 contextMenu={this.createContextMenu(bookmark.uuid)}>
+                                    <li className={
+                                        `${SelectableListStyles.selectableListItem} ${selectedBookmark === bookmark.uuid && SelectableListStyles.selectableListItem__selected}`
+                                    }
+                                        onClick={() => this.handleClick( bookmark.uuid )}>
+                                        <img alt='Icon'
+                                             src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${bookmark.url}`} />
+                                        {bookmark.url}
+                                    </li>
+                                </MakeContextMenu>
                             );
                         } )
                     }
-                </Menu>
+                </ul>
             </div>
         );
     }

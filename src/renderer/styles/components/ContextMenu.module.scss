@@ -1,0 +1,52 @@
+@import "../AppTheme";
+@import "../Sizes";
+
+.contextMenu {
+    background-color: $pane-items-contextmenu-items-background;
+
+    border: 1px solid $pane-items-contextmenu-border;
+    list-style: none;
+
+    width: 100%;
+    height: auto;
+    min-width: 150px;
+    padding: 0.1rem 0;
+    margin: 0;
+
+    box-shadow: 1px 1px 5px gray;
+
+}
+
+.contextMenuItems {
+    width: 100%;
+    height: auto;
+    padding: 0.2rem $padding-small;
+
+    color: $pane-items-contextmenu-items-text;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: $pane-items-contextmenu-items-background__hovered;
+        color: $pane-items-contextmenu-items-text__hovered;
+    }
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.contextMenuDivider {
+    width: 100%;
+    margin: 0.1rem 0.05rem;
+    content: "";
+    border-bottom: 1px solid $highest;
+}
+
+.contextMenuItemsIcon {
+    margin-right: 0.15rem;
+}
+
+.contextMenuItemsText {
+
+}
