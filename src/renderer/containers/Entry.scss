@@ -1,5 +1,8 @@
+@import "../styles/AppTheme";
 * {
     box-sizing: border-box;
+
+    transition-duration: 50ms;
 }
 
 html,
@@ -12,12 +15,6 @@ body {
     margin: 0;
 
     font-family: 'Roboto', sans-serif;
-}
 
-@font-face {
-    font-family: 'Roboto';
-    src: url('../styles/fonts/Roboto/Roboto-Regular.ttf');
-    font-weight: normal;
-    font-style: normal;
+    background-color: $high;
 }
-

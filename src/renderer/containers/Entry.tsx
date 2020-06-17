@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader/root';
 import Topbar from './TopbarBundle/Topbar';
 
 import './Entry.scss';
+import '../styles/Fonts.scss';
 import 'normalize.css';
 
 import Explorer from './Explorer';

@@ -4,9 +4,7 @@ import { BookmarkBranch } from '../../../schemas/bookmarkSchemas';
 import Styles from './Branches.module.scss';
 import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
 import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/all';
 

@@ -14,8 +14,9 @@ function Topbar() {
     return (
         <div className={Styles.icon}>
             <TitleBar
-                icon={<img src={icon} className="icon" alt="App Icon" />}
+                iconSrc={icon}
                 currentWindow={currentWindow}
+                platform={process.platform as any}
                 theme={{}}
                 title="TBookmarker"
                 menu={Menus.MainMenu}

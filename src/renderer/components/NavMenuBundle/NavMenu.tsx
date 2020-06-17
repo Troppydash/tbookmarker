@@ -3,7 +3,6 @@ import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
 import BreadcrumbStyles from '../../styles/components/Breadcrumb.module.scss';
-// import { Breadcrumb, Breadcrumbs, IBreadcrumbProps, Icon } from '@blueprintjs/core';
 import { Queryer } from '../../services/bookmarks/exports';
 import { AiOutlineHome, BsFillBookmarkFill, FiGitBranch, FiGitCommit } from 'react-icons/all';
 import { IconType } from 'react-icons';

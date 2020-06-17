@@ -2,9 +2,7 @@ import React, { Component, useState } from 'react';
 import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../../../schemas/bookmarkSchemas';
 
 import Styles from './Bookmarks.module.scss';
-import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';
 import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons/lib';
 import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
 import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/all';
