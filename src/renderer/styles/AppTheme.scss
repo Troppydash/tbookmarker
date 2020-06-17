@@ -19,10 +19,14 @@ $pane-items-background__selected: $medium;
 $pane-items-text__selected: $lowest;
 
 $pane-items-contextmenu-background: $low;
-$pane-items-contextmenu-border: $highest;
+$pane-items-contextmenu-border: $border-separator-background;
 
 $pane-items-contextmenu-items-background: $lowest;
 $pane-items-contextmenu-items-text: $highest;
 
 $pane-items-contextmenu-items-background__hovered: $low;
 $pane-items-contextmenu-items-text__hovered: $highest;
+
+
+$model-background: $lowest;
+$model-backdrop: rgba(0.5, 0.5, 0.5, 0.5);

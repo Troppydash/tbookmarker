@@ -1,0 +1,34 @@
+@import "./src/renderer/styles/AppTheme";
+.zIndexFix {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modelBackdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
+    background-color: $model-backdrop;
+}
+
+.modelContainer {
+    height: auto;
+    max-width: 90vw;
+    min-height: 200px;
+
+    background-color: $model-background;
+    z-index: 99;
+
+    border-radius: 0.1rem;
+}

@@ -8,6 +8,8 @@
 
     list-style: none;
     font-size: $font-medium;
+
+    border-right: 1px solid $border-separator-background;
 }
 
 .selectableListItem {

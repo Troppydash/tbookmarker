@@ -1,4 +1,4 @@
-import React, { Component, useState, Fragment } from 'react';
+import React, { Component } from 'react';
 import { BookmarkBranch } from '../../../schemas/bookmarkSchemas';
 
 import Styles from './Branches.module.scss';
@@ -7,6 +7,9 @@ import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scs
 
 import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/all';
+import MakeModel, { ModelSize } from '../../MakeModelBundle/MakeModel';
+import ModelHeader from '../../MakeModelBundle/ModelHeaderBundle/ModelHeader';
+import ModelContent from '../../MakeModelBundle/ModelContentBundle/ModelContent';
 
 interface BranchesProps {
     branches: BookmarkBranch[];
@@ -16,13 +19,15 @@ interface BranchesProps {
 }
 
 interface BranchesState {
-
+    isShowing: boolean
 }
 
 //TODO: Do the context menu and list on the rest
 
 class Branches extends Component<BranchesProps, BranchesState> {
-    state = {};
+    state = {
+        isShowing: true
+    };
 
     handleClick = ( uuid: string ) => {
         this.props.selectBranch( uuid );
@@ -34,7 +39,7 @@ class Branches extends Component<BranchesProps, BranchesState> {
                 <li className={ContextMenuStyles.contextMenuItems}>
                     <span>{branchID}</span>
                 </li>
-                <div className={ContextMenuStyles.contextMenuDivider}/>
+                <div className={ContextMenuStyles.contextMenuDivider} />
                 <li className={ContextMenuStyles.contextMenuItems}>
                     <div className={ContextMenuStyles.contextMenuItemsIcon}>
                         <AiOutlineEdit />
@@ -57,9 +62,22 @@ class Branches extends Component<BranchesProps, BranchesState> {
 
     render() {
         const { branches, selectedBranch, selectBranch } = this.props;
+        const { isShowing } = this.state;
 
         return (
             <div className={Styles.container}>
+                <MakeModel handleClose={() => {
+                    this.setState( {
+                        isShowing: false
+                    } );
+                }}
+                           isShowing={isShowing}
+                           size={ModelSize.lg}>
+                    <ModelHeader title="Add New Branch" />
+                    <ModelContent>
+                        <h1>Hello</h1>
+                    </ModelContent>
+                </MakeModel>
                 <div className={Styles.folderTitle}>
                     <span>Branches</span>
                     <button onClick={this.props.addBranch}>Add</button>

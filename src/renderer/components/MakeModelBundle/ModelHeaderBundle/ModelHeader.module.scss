@@ -1,0 +1,55 @@
+@import "./src/renderer/styles/AppTheme";
+
+.modelHeaderContainer {
+    height: 50px;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: $medium;
+}
+
+.modelHeaderText {
+    padding: 5px 10px;
+
+    color: $lowest;
+
+    font-size: 1.25rem;
+}
+
+.modelHeaderButton {
+
+    height: 40px;
+    width: 40px;
+
+    margin-right: 5px;
+
+    font-size: 200%;
+
+    button {
+        height: 40px;
+        width: 40px;
+
+        margin: 0;
+        border: none;
+        background: none;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        cursor: pointer;
+
+        color: $low;
+
+        svg:hover {
+            color: $lowest;
+        }
+
+    }
+
+}
+
+
