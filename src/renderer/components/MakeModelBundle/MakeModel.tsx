@@ -14,7 +14,7 @@ export enum ModelSize {
     sm, md, lg, xl
 }
 
-interface MakeModelProps {
+export interface MakeModelProps {
     handleClose: () => void;
     children: ReactElement | ReactElement[];
 

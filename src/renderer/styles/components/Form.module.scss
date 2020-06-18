@@ -1,0 +1,51 @@
+@import "../AppTheme";
+
+.form {
+    width: 100%;
+    overflow: auto;
+}
+
+.inputGroupSubmit {
+    position: relative;
+    margin: 1rem 0;
+    width: 100%;
+    & > * {
+        margin: 0.25rem 0;
+    }
+}
+
+.inputGroup {
+    position: relative;
+    margin: 1rem 0;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    & > * {
+        margin: 0.25rem 0;
+    }
+}
+
+.inputLabel {
+    font-size: 1.2rem;
+}
+
+.input {
+    color: $high;
+    padding: 0.25rem 0.5rem;
+    background: white;
+    border: 1px solid $highest;
+
+    width: 100%;
+}
+
+.error {
+    color: #991a1a;
+}
+
+.formSubmit {
+    float: right;
+}

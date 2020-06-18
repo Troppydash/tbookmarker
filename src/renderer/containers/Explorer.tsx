@@ -193,12 +193,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         };
     };
 
-    handleAddBranch = async () => {
-        // TODO: Implement this
-        const newBranch = makeBookmarkBranch();
-        newBranch.name = 'Nice Branch';
-        newBranch.description = 'Very Nice Branch indeed.';
-
+    handleAddBranch = async (newBranch: BookmarkBranch) => {
         const options = this.getOptions();
         if ( options !== null ) {
             await this.props.AddBranch( newBranch, options );

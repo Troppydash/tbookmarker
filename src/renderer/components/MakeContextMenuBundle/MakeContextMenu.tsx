@@ -5,6 +5,8 @@ interface MakeContextMenuProps {
     children: ReactChild | ReactChildren;
     id: any;
     contextMenu: ReactChild;
+    onActivate?: ( id: string ) => void;
+    onHide?: ( id: string ) => void;
 }
 
 // Little ReactContextMenu wrapper
@@ -14,7 +16,9 @@ function MakeContextMenu( props: MakeContextMenuProps ) {
             <ContextMenuTrigger id={props.id}>
                 {props.children}
             </ContextMenuTrigger>
-            <ContextMenu id={props.id}>
+            <ContextMenu id={props.id}
+                         onShow={() => props.onActivate?.( props.id )}
+                         onHide={() => props.onHide?.( props.id )}>
                 <MenuItem>
                     {props.contextMenu}
                 </MenuItem>

@@ -10,6 +10,10 @@
     font-size: $font-medium;
 
     border-right: 1px solid $border-separator-background;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 100%;
 }
 
 .selectableListItem {
@@ -30,4 +34,8 @@
 .selectableListItem__selected {
     background-color: $pane-items-background__selected;
     color: $pane-items-text__selected;
+}
+
+.scrollable {
+    height: calc(100% - 55px);
 }

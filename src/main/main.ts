@@ -21,7 +21,7 @@ const createWindow = async () => {
 
     win = new BrowserWindow( {
         width: 800, height: 600,
-        minWidth: 600, minHeight: 300,
+        minWidth: 600, minHeight: 400,
 
         frame: false, // Hide title bars
         titleBarStyle: 'hidden'

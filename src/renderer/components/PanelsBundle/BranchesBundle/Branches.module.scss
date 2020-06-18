@@ -2,20 +2,60 @@
 @import "../../../styles/Sizes";
 
 .container {
-    height: auto;
+    height: 100%;
     width: 100%;
 
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 .folderTitle {
+    height: 55px;
+
     background-color: $pane-header-background;
     color: $pane-header-text;
 
 
     padding: $padding-small;
-    font-size: $font-big;
+
     border-right: 1px solid $border-separator-background;
     border-bottom: 1px solid $border-separator-background;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
 }
+
+.folderTitleText {
+    font-size: $font-big;
+}
+
+.folderTitleAdd {
+    display: flex;
+    align-items: center;
+
+    font-size: 1.4rem;
+
+    border-radius: 50%;
+
+    padding: 0.5rem;
+
+    transition-duration: 50ms;
+
+    &:hover {
+        color: $high;
+        background-color: $lowest;
+    }
+}
+
+.modelContent {
+    padding: 1rem;
+
+    & > h1 {
+        color: $high;
+        margin: 0;
+    }
+
+    width: 100%;
+}
+

@@ -1,0 +1,14 @@
+@import "../AppTheme";
+
+.normalButton {
+    background-color: $low;
+    color: $high;
+
+    padding: 0.5rem 0.75rem;
+    border: none;
+
+    &:hover {
+        background-color: $medium;
+        color: $highest;
+    }
+}
