@@ -1,11 +1,18 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { BookmarkBlob } from '../../schemas/bookmarkSchemas';
+import { BookmarkBlob, BookmarkGroup } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
 import BreadcrumbStyles from '../../styles/components/Breadcrumb.module.scss';
 import { Queryer } from '../../services/bookmarks/exports';
-import { AiOutlineHome, BsFillBookmarkFill, FiGitBranch, FiGitCommit } from 'react-icons/all';
+import { AiOutlineFolderAdd, AiOutlineHome, BsFillBookmarkFill, FiGitBranch, FiGitCommit } from 'react-icons/all';
 import { IconType } from 'react-icons';
+import ButtonStyles from '../../styles/components/Button.module.scss';
+import FormModel from '../MakeModelBundle/FormModel';
+import { ModelSize } from '../MakeModelBundle/MakeModel';
+import { Formik } from 'formik';
+import { BookmarkBranchBuilder, BookmarkGroupBuilder } from '../../schemas/bookmarksBuilders';
+import FormStyles from '../../styles/components/Form.module.scss';
+import Breadcrumb from './BreadcrumbBundle/Breadcrumb';
 
 interface NavMenuProps {
     selectedBranchID: string;
@@ -19,110 +26,116 @@ interface NavMenuProps {
     selectGroup: ( groupID: string ) => void;
     selectCommit: ( commitID: string ) => void;
     selectBookmark: ( bookmarkID: string ) => void;
+    createGroup: ( newGroup: BookmarkGroup ) => void;
+
 }
 
 interface NavMenuBreadcrumbItem {
     text: string;
     icon: IconType;
     onClick: () => void;
+
 }
 
 function NavMenu( props: NavMenuProps ) {
 
-    const [ menuPath, setMenuPath ] = useState<NavMenuBreadcrumbItem[]>( [] );
-
-    useEffect( () => {
-        getCurrentPath()
-            .then( newPath => {
-                setMenuPath( newPath );
-            } );
-    }, [ props ] );
-
-    const getCurrentPath = async () => {
-        const { data, selectedGroupID, selectedBranchID, selectedCommitID, selectedBookmarkID } = props;
-        const { selectBranch, selectGroup, selectBookmark, selectCommit } = props;
-        const result: NavMenuBreadcrumbItem[] = [];
-
-        if ( !data || !data.bookmarks ) {
-            return result;
-        }
-
-        if ( selectedGroupID ) {
-            const options = {
-                data: data.bookmarks,
-                commitID: selectedCommitID,
-                branchID: selectedBranchID,
-                groupID: selectedGroupID
-            };
-
-            const group = await Queryer.selectGroupFromGroupID( selectedGroupID, options );
-
-            result.push( {
-                text: group ? group.name : selectedGroupID,
-                icon: AiOutlineHome,
-                onClick: () => selectGroup( selectedGroupID )
-            } );
-
-            if ( selectedBranchID ) {
-                const branch = await Queryer.selectBranchFromBranchID( selectedBranchID, options );
-                result.push( {
-                    text: branch ? branch.name : selectedBranchID,
-                    icon: FiGitBranch,
-                    onClick: () => selectBranch( selectedBranchID )
-                } );
-
-                if ( selectedCommitID ) {
-                    const commit = await Queryer.selectCommitFromCommitID( selectedCommitID, options );
-                    result.push( {
-                        text: commit ? commit.title : selectedCommitID,
-                        icon: FiGitCommit,
-                        onClick: () => selectCommit( selectedCommitID )
-                    } );
-
-                    if ( selectedBookmarkID ) {
-                        const bookmark = await Queryer.selectBookmarkFromBookmarkID( selectedBookmarkID, options );
-                        result.push( {
-                            text: bookmark ? bookmark.url : selectedBookmarkID,
-                            icon: BsFillBookmarkFill,
-                            onClick: () => selectBookmark( selectedBookmarkID )
-                        } );
-                    }
-                }
-            }
-        }
-
-        return result;
-    };
+    const [ isShowing, setIsShowing ] = useState( false );
 
     return (
-        <div className={Styles.container}>
-            <div className={BreadcrumbStyles.breadcrumbContainer}>
-                {
-                    menuPath.map( ( item, index ) => {
-                        return (
-                            <Fragment key={index}>
-                                {
-                                    index !== 0 && (
-                                        <div className={BreadcrumbStyles.breadcrumbSeparator}>
-                                            <span>/</span>
-                                        </div>
-                                    )
-                                }
-                                <div className={BreadcrumbStyles.breadcrumbItem}
-                                     onClick={item.onClick}>
-                                    <div className={BreadcrumbStyles.breadcrumbIcon}>
-                                        <item.icon />
-                                    </div>
-                                    <div className={BreadcrumbStyles.breadcrumbText}>
-                                        <span>{item.text}</span>
-                                    </div>
-                                </div>
-                            </Fragment>
-                        );
-                    } )
-                }
+        <>
+            {/*Model*/}
+            <FormModel handleClose={() => setIsShowing( false )}
+                       isShowing={isShowing}
+                       size={ModelSize.sm}
+                       mainTitle="Add a new Group"
+                       subTitle="New Group">
+                <Formik
+                    initialValues={{
+                        name: '',
+                        description: ''
+                    }}
+                    validate={values => {
+                        const errors: any = {};
+                        if ( !values.name ) {
+                            errors.name = 'Group Name is required';
+                        }
+                        return errors;
+                    }}
+                    onSubmit={( values, { setSubmitting } ) => {
+                        const builder = new BookmarkGroupBuilder()
+                            .name( values.name );
+                        if ( values.description ) {
+                            builder
+                                .description( values.description );
+                        }
+                        const newGroup = builder.build();
+                        props.createGroup( newGroup );
+                        setIsShowing( false );
+                    }}>
+                    {( {
+                           values,
+                           errors,
+                           touched,
+                           handleChange,
+                           handleBlur,
+                           handleSubmit
+                       } ) => (
+                        <form onSubmit={handleSubmit} className={FormStyles.form}>
+                            <div className={FormStyles.inputGroup}>
+                                <label className={FormStyles.inputLabel}>Name:</label>
+                                <input type="text"
+                                       name="name"
+                                       onChange={handleChange}
+                                       onBlur={handleBlur}
+                                       value={values.name}
+                                       className={FormStyles.input} />
+                                <span className={FormStyles.error}>
+                                    {errors.name && touched.name && errors.name}
+                                </span>
+                            </div>
+                            <div className={FormStyles.inputGroup}>
+                                <label className={FormStyles.inputLabel}>Description:</label>
+                                <input type="text"
+                                       name="description"
+                                       onChange={handleChange}
+                                       onBlur={handleBlur}
+                                       value={values.description}
+                                       className={FormStyles.input} />
+                                <span className={FormStyles.error}>
+                                    {errors.description && touched.description && errors.description}
+                                </span>
+                            </div>
+                            <div className={FormStyles.inputGroupSubmit}>
+                                <button type="submit"
+                                        className={`${ButtonStyles.normalButton} ${FormStyles.formSubmit}`}>
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </Formik>
+            </FormModel>
+            {/*Model*/}
+
+            <div className={Styles.container}>
+                <Breadcrumb {...props} />
+                <div className={`${ButtonStyles.iconButtonContainer}`}
+                     onClick={() => setIsShowing( true )}>
+                    <div className={`${ButtonStyles.iconButton} ${ButtonStyles.iconButtonSmall}`}>
+                        <AiOutlineFolderAdd />
+                    </div>
+                    <span>Add Group</span>
+                </div>
+                {/*TODO: View Groups*/}
+                <div className={`${ButtonStyles.iconButtonContainer}`}
+                     onClick={() => setIsShowing( true )}>
+                    <div className={`${ButtonStyles.iconButton} ${ButtonStyles.iconButtonSmall}`}>
+                        <AiOutlineFolderAdd />
+                    </div>
+                    <span>View Groups</span>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

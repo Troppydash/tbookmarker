@@ -1,4 +1,5 @@
 @import "../AppTheme";
+@import "../Sizes";
 
 .normalButton {
     background-color: $low;
@@ -10,5 +11,76 @@
     &:hover {
         background-color: $medium;
         color: $highest;
+    }
+}
+
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    font-size: 1.4rem;
+
+    border-radius: 50%;
+
+    padding: 0.5rem;
+    color: $low;
+
+    transition-duration: 0ms;
+
+    transition: background-color 150ms linear;
+
+    &:hover {
+        color: $highest;
+        background-color: $lowest;
+    }
+
+    &:active {
+        transform: scale(1.05);
+    }
+}
+
+.iconButtonSmall {
+    padding: 0.25rem;
+    font-size: 1.2rem;
+}
+
+.iconButtonContainer {
+    display: flex;
+    width: auto;
+    height: auto;
+
+    align-items: center;
+    justify-content: center;
+
+    color: $low;
+    user-select: none;
+    cursor: pointer;
+
+    padding-right: $padding-small;
+    transition: color 0ms linear;
+
+    &:hover {
+
+    }
+
+    &:active {
+        transform: scale(1.05);
+    }
+
+    span {
+        color: $lowest;
+        white-space: nowrap;
+    }
+
+    .iconButton {
+        &:hover {
+            color: $low;
+            background-color: initial;
+        }
+
+        &:active {
+            transform: none;
+        }
     }
 }

@@ -30,24 +30,6 @@
     font-size: $font-big;
 }
 
-.folderTitleAdd {
-    display: flex;
-    align-items: center;
-
-    font-size: 1.4rem;
-
-    border-radius: 50%;
-
-    padding: 0.5rem;
-
-    transition-duration: 50ms;
-
-    &:hover {
-        color: $high;
-        background-color: $lowest;
-    }
-}
-
 .modelContent {
     padding: 1rem;
 

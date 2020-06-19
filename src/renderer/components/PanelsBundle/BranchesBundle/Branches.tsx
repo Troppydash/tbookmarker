@@ -100,10 +100,10 @@ class Branches extends Component<BranchesProps, BranchesState> {
                         }}
                         onSubmit={( values, { setSubmitting } ) => {
                             const newBranch = new BookmarkBranchBuilder()
-                                .name(values.branchName)
+                                .name( values.branchName )
                                 .build();
 
-                            this.props.addBranch(newBranch);
+                            this.props.addBranch( newBranch );
                             this.closeModel();
                         }}>
                         {( {
@@ -142,7 +142,7 @@ class Branches extends Component<BranchesProps, BranchesState> {
                 <div className={Styles.container}>
                     <div className={Styles.folderTitle}>
                         <span className={Styles.folderTitleText}>Branches</span>
-                        <div className={Styles.folderTitleAdd} onClick={this.openModel}>
+                        <div className={ButtonStyles.iconButton} onClick={this.openModel}>
                             <AiOutlineFolderAdd />
                         </div>
                     </div>

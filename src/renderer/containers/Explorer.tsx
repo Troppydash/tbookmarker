@@ -10,8 +10,8 @@ import NavMenu from '../components/NavMenuBundle/NavMenu';
 import Branches from '../components/PanelsBundle/BranchesBundle/Branches';
 import Commits from '../components/PanelsBundle/CommitsBundle/Commits';
 import Bookmarks from '../components/PanelsBundle/BookmarksBundle/Bookmarks';
-import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../schemas/bookmarkSchemas';
-import { CreateBranch, CreateSchema } from '../actions/create/bookmarksCreateActions';
+import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit, BookmarkGroup } from '../schemas/bookmarkSchemas';
+import { CreateBranch, CreateGroup, CreateSchema } from '../actions/create/bookmarksCreateActions';
 import { makeBookmarkBranch } from '../schemas/bookmarksEmpty';
 import _ from 'lodash';
 import { Queryer } from '../services/bookmarks/exports';
@@ -27,7 +27,8 @@ const mapDispatchToProps = {
     LoadSingleBlob: LoadSingleBlob,
     SaveBlob: SaveSingleBookmarkBlob,
     AddBranch: CreateBranch,
-    AddSchema: CreateSchema
+    AddSchema: CreateSchema,
+    AddGroup: CreateGroup
 };
 
 const connector = connect( mapStateToProps, mapDispatchToProps );
@@ -193,12 +194,19 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         };
     };
 
-    handleAddBranch = async (newBranch: BookmarkBranch) => {
+    handleAddBranch = async ( newBranch: BookmarkBranch ) => {
         const options = this.getOptions();
         if ( options !== null ) {
             await this.props.AddBranch( newBranch, options );
         }
         await this.setBranches();
+    };
+
+    handleAddGroup = async ( newGroup: BookmarkGroup ) => {
+        const options = this.getOptions();
+        if ( options !== null ) {
+            await this.props.AddGroup( newGroup, options );
+        }
     };
 
     render() {
@@ -221,6 +229,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                              selectCommit={this.handleCommitSelect}
                              selectBranch={this.handleBranchSelect}
                              selectGroup={this.handleGroupSelect}
+                             createGroup={this.handleAddGroup}
                     />
                 </div>
 
