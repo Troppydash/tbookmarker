@@ -1,5 +1,5 @@
 import {
-    BookmarkBlob,
+    BookmarkBlob, BookmarkBookmarks,
     BookmarkBranch,
     BookmarkBranchFrom,
     BookmarkCommit,
@@ -94,12 +94,12 @@ export class BookmarkGroupBuilder {
         return this;
     }
 
-    description(description: string): BookmarkGroupBuilder {
+    description( description: string ): BookmarkGroupBuilder {
         this._BookmarkGroup.description = description;
         return this;
     }
 
-    branches(branches: BookmarkBranch[]): BookmarkGroupBuilder {
+    branches( branches: BookmarkBranch[] ): BookmarkGroupBuilder {
         this._BookmarkGroup.branches = branches;
         return this;
     }
@@ -136,22 +136,22 @@ export class BookmarkBranchBuilder {
         return this;
     }
 
-    commits(commits: BookmarkCommit[]): BookmarkBranchBuilder {
+    commits( commits: BookmarkCommit[] ): BookmarkBranchBuilder {
         this._BookmarkBranch.commits = commits;
         return this;
     }
 
-    branchedFrom(branchedFrom: BookmarkBranchFrom): BookmarkBranchBuilder {
+    branchedFrom( branchedFrom: BookmarkBranchFrom ): BookmarkBranchBuilder {
         this._BookmarkBranch.branchedFrom = branchedFrom;
         return this;
     }
 
-    mergedWith(mergedWith: BookmarkMergedWith): BookmarkBranchBuilder {
+    mergedWith( mergedWith: BookmarkMergedWith ): BookmarkBranchBuilder {
         this._BookmarkBranch.mergedWith = mergedWith;
         return this;
     }
 
-    description(description: string): BookmarkBranchBuilder {
+    description( description: string ): BookmarkBranchBuilder {
         this._BookmarkBranch.description = description;
         return this;
     }
@@ -176,17 +176,17 @@ export class BookmarkCommitBuilder {
         };
     }
 
-    title(title: string): BookmarkCommitBuilder {
+    title( title: string ): BookmarkCommitBuilder {
         this._BookmarkCommit.title = title;
         return this;
     }
 
-    createdAt(createdAt: number): BookmarkCommitBuilder {
+    createdAt( createdAt: number ): BookmarkCommitBuilder {
         this._BookmarkCommit.createdAt = createdAt;
         return this;
     }
 
-    description(description: string): BookmarkCommitBuilder {
+    description( description?: string ): BookmarkCommitBuilder {
         this._BookmarkCommit.description = description;
         return this;
     }
@@ -195,4 +195,37 @@ export class BookmarkCommitBuilder {
         return this._BookmarkCommit;
     }
 }
+
 // TODO: Rest of builder class
+/**
+ * BookmarkBookmarks Builder Class
+ */
+export class BookmarkBookmarksBuilder {
+    private readonly _BookmarkBookmarks: BookmarkBookmarks;
+
+    constructor() {
+        this._BookmarkBookmarks = {
+            url: '',
+            uuid: uuidv4()
+        };
+    }
+
+    url( url: string ) {
+        this._BookmarkBookmarks.url = url;
+        return this;
+    }
+
+    title(title?: string) {
+        this._BookmarkBookmarks.title = title;
+        return this;
+    }
+
+    description(description?: string) {
+        this._BookmarkBookmarks.description = description;
+        return this;
+    }
+
+    build(): BookmarkBookmarks {
+        return this._BookmarkBookmarks;
+    }
+}

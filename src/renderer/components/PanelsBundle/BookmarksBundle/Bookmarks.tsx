@@ -5,19 +5,36 @@ import Styles from './Bookmarks.module.scss';
 import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
 import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
 import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/all';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineFolderAdd, GrFormClose, IoIosClose } from 'react-icons/all';
+import FormModel from '../../MakeModelBundle/FormModel';
+import { ModelSize } from '../../MakeModelBundle/MakeModel';
+import { Form, Formik } from 'formik';
+import { BookmarkBookmarksBuilder, BookmarkBranchBuilder } from '../../../schemas/bookmarksBuilders';
+import FormStyles from '../../../styles/components/Form.module.scss';
+import ButtonStyles from '../../../styles/components/Button.module.scss';
+import _ from 'lodash';
 
 interface BookmarksProps {
     bookmarks: BookmarkBookmarks[];
     selectedBookmark: string;
     selectBookmark: ( branchID: string ) => void;
+
+    addBookmarks: ( bookmarks: BookmarkBookmarks[] ) => Promise<void>;
+    isEnabled: boolean;
 }
 
 interface BookmarksState {
+    isShowing: boolean;
+    bookmarks: BookmarkBookmarks[];
+    currentUrl: string;
 }
 
 class Bookmarks extends Component<BookmarksProps, BookmarksState> {
-    state = {};
+    state = {
+        isShowing: false,
+        bookmarks: [] as BookmarkBookmarks[],
+        currentUrl: ''
+    };
 
     handleClick = ( uuid: string ) => {
         this.props.selectBookmark( uuid );
@@ -44,7 +61,7 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
         }
     }
 
-    createContextMenu = (branchID: string) => {
+    createContextMenu = ( branchID: string ) => {
         return (
             <ul className={ContextMenuStyles.contextMenu}>
                 <li className={ContextMenuStyles.contextMenuItems}>
@@ -62,36 +79,143 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
         );
     };
 
+    closeModel = () => {
+        this.setState( {
+            isShowing: false,
+            currentUrl: '',
+            bookmarks: [] as BookmarkBookmarks[]
+        } );
+    };
+
+    openModel = () => {
+        this.setState( {
+            isShowing: true
+        } );
+    };
+
+    handleSubmit = async () => {
+        await this.props.addBookmarks(this.state.bookmarks);
+        this.closeModel();
+    };
+
+    addBookmark = ( e: any ) => {
+        e.preventDefault();
+        const newBookmark = new BookmarkBookmarksBuilder().url( this.state.currentUrl ).build();
+        this.setState( {
+            bookmarks: [ ...this.state.bookmarks, newBookmark ],
+            currentUrl: ''
+        } );
+    };
+
+    modifyBookmark = ( e: any, index: number ) => {
+        const oldState = _.cloneDeep( this.state.bookmarks );
+        oldState[index].url = e.currentTarget.value;
+        this.setState( {
+            bookmarks: oldState
+        } );
+    };
+
+    removeBookmark = ( uuid: string ) => {
+        const filteredBookmarks = this.state.bookmarks.filter( b => b.uuid !== uuid );
+
+        this.setState( {
+            bookmarks: filteredBookmarks
+        } );
+    };
+
+    handleUrl = ( e: any, uuid: string ) => {
+        const index = this.state.bookmarks.indexOf( this.state.bookmarks.find( b => b.uuid === uuid )! );
+        const tempBookmarks = _.cloneDeep( this.state.bookmarks );
+        tempBookmarks[index] = e.currentTarget.value;
+        this.setState( {
+            bookmarks: tempBookmarks
+        }, () => {
+
+        } );
+    };
+
+
     render() {
         const { bookmarks, selectedBookmark } = this.props;
 
         return (
-            <div className={Styles.container}>
-                <div className={Styles.folderTitle}>
-                    <span>Bookmarks</span>
-                </div>
+            <>
+                {/*Model*/}
+                <FormModel handleClose={this.closeModel}
+                           isShowing={this.state.isShowing}
+                           size={ModelSize.sm}
+                           mainTitle="Add commits"
+                           subTitle="New Commits">
+                    <div className={FormStyles.form}>
+                        <form onSubmit={this.addBookmark} className={FormStyles.inputGroup}>
+                            <label className={FormStyles.inputLabel}>Add Url</label>
+                            <input type="text"
+                                   onChange={( e ) => this.setState( {
+                                       currentUrl: e.currentTarget.value
+                                   } )}
+                                   value={this.state.currentUrl}
+                                   className={FormStyles.input} />
+                            <button type="submit" hidden>Submit</button>
+                        </form>
+                        {
+                            this.state.bookmarks.map( ( bookmark, index ) => (
+                                <div className={`${FormStyles.inputGroup} ${FormStyles.inputGroupInline}`}
+                                     key={bookmark.uuid}>
+                                    <input type="text"
+                                           name={`url${index + 1}`}
+                                           value={bookmark.url}
+                                           className={FormStyles.input}
+                                           onChange={( e ) => this.modifyBookmark( e, index )} />
+                                    <div
+                                        className={`${ButtonStyles.iconButton} ${ButtonStyles.iconButtonDark} ${ButtonStyles.iconButtonSmall}`}
+                                        onClick={() => this.removeBookmark( bookmark.uuid )}>
+                                        <IoIosClose />
+                                    </div>
+                                </div>
+                            ) )
+                        }
 
-                <ul className={SelectableListStyles.selectableListContainer}>
-                    {
-                        bookmarks.map( bookmark => {
-                            return (
-                                <MakeContextMenu id={bookmark.uuid}
-                                                 key={bookmark.uuid}
-                                                 contextMenu={this.createContextMenu(bookmark.uuid)}>
-                                    <li className={
-                                        `${SelectableListStyles.selectableListItem} ${selectedBookmark === bookmark.uuid && SelectableListStyles.selectableListItem__selected}`
-                                    }
-                                        onClick={() => this.handleClick( bookmark.uuid )}>
-                                        <img alt='Icon'
-                                             src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${bookmark.url}`} />
-                                        {bookmark.url}
-                                    </li>
-                                </MakeContextMenu>
-                            );
-                        } )
-                    }
-                </ul>
-            </div>
+                        <div className={FormStyles.inputGroupSubmit}>
+                            <button onClick={this.handleSubmit}
+                                    className={`${ButtonStyles.normalButton} ${FormStyles.formSubmit}`}>
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </FormModel>
+                {/*Model*/}
+
+                <div className={Styles.container}>
+                    <div className={Styles.folderTitle}>
+                        <span className={Styles.folderTitleText}>Bookmarks</span>
+                        <button className={ButtonStyles.iconButton} onClick={() => this.openModel()}
+                                disabled={!this.props.isEnabled}>
+                            <AiOutlineFolderAdd />
+                        </button>
+                    </div>
+
+                    <ul className={SelectableListStyles.selectableListContainer}>
+                        {
+                            bookmarks.map( bookmark => {
+                                return (
+                                    <MakeContextMenu id={bookmark.uuid}
+                                                     key={bookmark.uuid}
+                                                     contextMenu={this.createContextMenu( bookmark.uuid )}>
+                                        <li className={
+                                            `${SelectableListStyles.selectableListItem} ${selectedBookmark === bookmark.uuid && SelectableListStyles.selectableListItem__selected}`
+                                        }
+                                            onClick={() => this.handleClick( bookmark.uuid )}>
+                                            <img alt='Icon'
+                                                 src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${bookmark.url}`} />
+                                            {bookmark.url}
+                                        </li>
+                                    </MakeContextMenu>
+                                );
+                            } )
+                        }
+                    </ul>
+                </div>
+            </>
         );
     }
 

@@ -11,8 +11,13 @@ import Branches from '../components/PanelsBundle/BranchesBundle/Branches';
 import Commits from '../components/PanelsBundle/CommitsBundle/Commits';
 import Bookmarks from '../components/PanelsBundle/BookmarksBundle/Bookmarks';
 import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit, BookmarkGroup } from '../schemas/bookmarkSchemas';
-import { CreateBranch, CreateGroup, CreateSchema } from '../actions/create/bookmarksCreateActions';
-import { makeBookmarkBranch } from '../schemas/bookmarksEmpty';
+import {
+    CreateBookmark,
+    CreateBranch,
+    CreateCommit,
+    CreateGroup,
+    CreateSchema
+} from '../actions/create/bookmarksCreateActions';
 import _ from 'lodash';
 import { Queryer } from '../services/bookmarks/exports';
 import { doesAnyBookmarksExist } from '../services/bookmarks/json/jsonBookmarksHelpers';
@@ -28,7 +33,9 @@ const mapDispatchToProps = {
     SaveBlob: SaveSingleBookmarkBlob,
     AddBranch: CreateBranch,
     AddSchema: CreateSchema,
-    AddGroup: CreateGroup
+    AddGroup: CreateGroup,
+    AddCommit: CreateCommit,
+    AddBookmark: CreateBookmark
 };
 
 const connector = connect( mapStateToProps, mapDispatchToProps );
@@ -209,6 +216,24 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         }
     };
 
+    handleAddCommit = async ( newCommit: BookmarkCommit ) => {
+        const options = this.getOptions();
+        if ( options !== null ) {
+            await this.props.AddCommit( newCommit, options );
+        }
+        await this.setCommits();
+    };
+
+    handleAddBookmarks = async ( newBookmark: BookmarkBookmarks[] ) => {
+        const options = this.getOptions();
+        if ( options !== null ) {
+            for (const bookmark of newBookmark) {
+                await this.props.AddBookmark(bookmark, options);
+            }
+        }
+        await this.setBookmarks();
+    };
+
     render() {
         const { singleBlob: { isLoading, hasError, reason, item } } = this.props;
         const { branches, commits, bookmarks } = this.state;
@@ -253,13 +278,17 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                                     <div className={Styles.commitsPane}>
 
                                         <Commits selectedCommit={selectedCommitID} commits={commits || []}
-                                                 selectCommit={this.handleCommitSelect} />
+                                                 selectCommit={this.handleCommitSelect}
+                                                 addCommit={this.handleAddCommit}
+                                                 isEnabled={!!this.state.selectedBranchID} />
                                     </div>
                                     {/*BookmarksPane*/}
                                     <div className={Styles.bookmarksPane}>
                                         <Bookmarks selectBookmark={this.handleBookmarkSelect}
                                                    bookmarks={bookmarks || []}
-                                                   selectedBookmark={selectedBookmarkID} />
+                                                   selectedBookmark={selectedBookmarkID}
+                                        addBookmarks={this.handleAddBookmarks}
+                                        isEnabled={!!this.state.selectedCommitID}/>
                                     </div>
                                 </>
                             )

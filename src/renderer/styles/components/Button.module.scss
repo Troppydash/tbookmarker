@@ -14,7 +14,10 @@
     }
 }
 
-.iconButton {
+.iconButton{
+    background: none;
+    border: none;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -30,7 +33,7 @@
 
     transition: background-color 150ms linear;
 
-    &:hover {
+    &:hover  {
         color: $highest;
         background-color: $lowest;
     }
@@ -40,10 +43,35 @@
     }
 }
 
+.iconButtonDark {
+    color: $highest;
+
+    &:hover  {
+        color: $low;
+        background-color: $medium;
+    }
+}
+
 .iconButtonSmall {
     padding: 0.25rem;
     font-size: 1.2rem;
 }
+
+
+.iconButton:disabled {
+    color: gray;
+
+
+    &:hover  {
+        color: gray;
+        background-color: initial;
+    }
+
+    &:active {
+        transform: none;
+    }
+}
+
 
 .iconButtonContainer {
     display: flex;

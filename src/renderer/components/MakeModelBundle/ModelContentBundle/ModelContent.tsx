@@ -6,9 +6,9 @@ interface ModelContentProps {
 
 function ModelContent( props: ModelContentProps ) {
     return (
-        <>
+        <div style={{overflowY: 'auto', maxHeight: 'calc(90vh - 50px)', width: '100%'}}>
             {props.children}
-        </>
+        </div>
     );
 }
 

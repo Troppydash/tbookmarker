@@ -2,8 +2,6 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { BookmarkBlob, BookmarkGroup } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
-import BreadcrumbStyles from '../../styles/components/Breadcrumb.module.scss';
-import { Queryer } from '../../services/bookmarks/exports';
 import { AiOutlineFolderAdd, AiOutlineHome, BsFillBookmarkFill, FiGitBranch, FiGitCommit } from 'react-icons/all';
 import { IconType } from 'react-icons';
 import ButtonStyles from '../../styles/components/Button.module.scss';
