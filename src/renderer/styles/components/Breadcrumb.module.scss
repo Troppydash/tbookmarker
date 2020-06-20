@@ -7,6 +7,10 @@
     width: 100%;
     height: 100%;
 
+    max-width: calc(100% - 130px);
+    overflow-x: auto;
+    overflow-y: hidden;
+
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -18,6 +22,8 @@
 }
 
 .breadcrumbItem {
+
+    white-space: nowrap;
 
     display: flex;
     align-items: flex-start;

@@ -76,7 +76,7 @@
 .iconButtonContainer {
     display: flex;
     width: auto;
-    height: auto;
+    height: 100%;
 
     align-items: center;
     justify-content: center;
@@ -89,7 +89,7 @@
     transition: color 0ms linear;
 
     &:hover {
-
+        background-color: $highest;
     }
 
     &:active {

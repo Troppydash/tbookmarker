@@ -17,13 +17,26 @@
 }
 
 .selectableListItem {
-    width: 100%;
     padding: $padding-small;
 
     background-color: $pane-items-background;
     color: $pane-items-text;
 
     cursor: pointer;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    span {
+        margin-left: 0.5rem;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
     &:hover:not(.selectableListItem__selected) {
         background-color: $pane-items-background__hovered;

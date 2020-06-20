@@ -94,7 +94,7 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
     };
 
     handleSubmit = async () => {
-        await this.props.addBookmarks(this.state.bookmarks);
+        await this.props.addBookmarks( this.state.bookmarks );
         this.closeModel();
     };
 
@@ -207,7 +207,9 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
                                             onClick={() => this.handleClick( bookmark.uuid )}>
                                             <img alt='Icon'
                                                  src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${bookmark.url}`} />
-                                            {bookmark.url}
+                                            <span>
+                                                {bookmark.url}
+                                            </span>
                                         </li>
                                     </MakeContextMenu>
                                 );

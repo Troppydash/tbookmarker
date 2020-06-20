@@ -117,13 +117,6 @@ function NavMenu( props: NavMenuProps ) {
 
             <div className={Styles.container}>
                 <Breadcrumb {...props} />
-                <div className={`${ButtonStyles.iconButtonContainer}`}
-                     onClick={() => setIsShowing( true )}>
-                    <div className={`${ButtonStyles.iconButton} ${ButtonStyles.iconButtonSmall}`}>
-                        <AiOutlineFolderAdd />
-                    </div>
-                    <span>Add Group</span>
-                </div>
                 {/*TODO: View Groups*/}
                 <div className={`${ButtonStyles.iconButtonContainer}`}
                      onClick={() => setIsShowing( true )}>
