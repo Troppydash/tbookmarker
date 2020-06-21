@@ -2,7 +2,14 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { BookmarkBlob, BookmarkGroup } from '../../schemas/bookmarkSchemas';
 
 import Styles from './NavMenu.module.scss';
-import { AiOutlineFolderAdd, AiOutlineHome, BsFillBookmarkFill, FiGitBranch, FiGitCommit } from 'react-icons/all';
+import {
+    AiOutlineFolderAdd,
+    AiOutlineHome,
+    BsFillBookmarkFill,
+    FiGitBranch,
+    FiGitCommit,
+    MdViewColumn
+} from 'react-icons/all';
 import { IconType } from 'react-icons';
 import ButtonStyles from '../../styles/components/Button.module.scss';
 import FormModel from '../MakeModelBundle/FormModel';
@@ -67,7 +74,7 @@ function NavMenu( props: NavMenuProps ) {
                 <div className={`${ButtonStyles.iconButtonContainer}`}
                      onClick={() => toggle()}>
                     <div className={`${ButtonStyles.iconButton} ${ButtonStyles.iconButtonSmall}`}>
-                        <AiOutlineFolderAdd />
+                        <MdViewColumn />
                     </div>
                     <span>View Groups</span>
                 </div>
