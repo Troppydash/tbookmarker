@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from 'path';
 
 const fsPromise = fs.promises;
 
@@ -14,6 +15,7 @@ export function CreateFoldersIfNotExists( path: string ): boolean {
             fs.mkdirSync( path, { recursive: true } );
             return true;
         } catch ( e ) {
+            console.error(e);
             return false;
         }
     }
@@ -27,7 +29,9 @@ export function CreateFoldersIfNotExists( path: string ): boolean {
  */
 export function GetApplicationStoragePath(): string | null {
     const home = require( 'os' ).homedir();
-    return `${home}/Documents/tbookmarker`;
+    const pt = path.join(home, 'Documents', 'Tbookmarker');
+    CreateFoldersIfNotExists(pt);
+    return pt;
 }
 
 /**
@@ -41,7 +45,8 @@ export function GetApplicationBookmarkStoragePath() {
         return null;
     }
 
-    const bookmarkPath = `${result}/storage/`;
+
+    const bookmarkPath = path.join(result, 'storage');
     if ( !CreateFoldersIfNotExists( bookmarkPath ) ) {
         return null;
     }
@@ -83,7 +88,10 @@ export async function readFilesFromStorage<T>( onFile: ( filename: string, conte
  */
 export function writeFileToStorage(fileName: string, fileContent: any): Promise<boolean> {
     const storagePath = GetApplicationBookmarkStoragePath();
-    const filePath = storagePath + fileName;
+    if (storagePath === null) {
+        return new Promise((resolve, reject) => reject(false));
+    }
+    const filePath = path.join(storagePath, fileName);
 
     return fsPromise.writeFile(filePath, fileContent)
         .then(() => {

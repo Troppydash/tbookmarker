@@ -21,6 +21,7 @@ import {
 import _ from 'lodash';
 import { Queryer } from '../services/bookmarks/exports';
 import { doesAnyBookmarksExist } from '../services/bookmarks/json/jsonBookmarksHelpers';
+import { BookmarkGroupBuilder } from '../schemas/bookmarksBuilders';
 
 // Redux connector
 const mapStateToProps = ( state: RootState ) => ({
@@ -72,9 +73,16 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         if ( !doesExist ) {
             alert( 'Adding Schema' );
             await this.props.AddSchema();
-        }
 
-        await this.props.LoadSingleBlob();
+            // TODO: Show first group dialog
+            const firstGroup = new BookmarkGroupBuilder()
+                .name("Initial Group")
+                .description("Auto Generated Group")
+                .build();
+            await this.props.AddGroup(firstGroup, this.getOptions());
+        } else {
+            await this.props.LoadSingleBlob();
+        }
         // Select the first group
         if ( !this.haveError() ) {
             if ( this.props.singleBlob.item!.bookmarks!.data.length > 0 ) {

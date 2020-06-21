@@ -42,7 +42,8 @@ export const CreateBlobReducer: Reducer<ICreateBlobState, TBookmarkCreateActionT
             return {
                 ...state,
                 hasError: action.payload.hasError,
-                reason: action.payload.reason
+                reason: action.payload.reason,
+                isLoading: false
             }
         }
         default:
