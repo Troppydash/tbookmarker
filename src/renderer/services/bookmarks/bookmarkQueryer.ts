@@ -42,6 +42,12 @@ export interface BookmarkQueryer {
 
 
     /**
+     * Select all the groups from data
+     * @param data
+     */
+    selectGroups( data: BookmarkBlob): Promise<BookmarkGroup[] | null>;
+
+    /**
      * Select all branches from groupID
      * @param groupID
      * @param options

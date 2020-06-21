@@ -31,5 +31,19 @@
     background-color: $model-background;
     z-index: 99;
 
+    display: flex;
+    flex-direction: column;
+
     border-radius: 0.1rem;
+}
+
+.modelContent {
+    padding: 1rem;
+
+    & > h1 {
+        color: $high;
+        margin: 0;
+    }
+
+    width: 100%;
 }

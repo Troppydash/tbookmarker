@@ -1,8 +1,10 @@
 @import "./src/renderer/styles/AppTheme";
+@import "./src/renderer/styles/Sizes";
 
 .footer {
-    min-height: 75px;
-
-    background-color: $medium;
-
+    flex: 1;
+    width: 100%;
+    height: auto;
+    background-color: $low;
+    padding: $padding-small;
 }

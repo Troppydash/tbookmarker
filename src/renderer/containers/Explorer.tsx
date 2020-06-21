@@ -213,7 +213,9 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         const options = this.getOptions();
         if ( options !== null ) {
             await this.props.AddGroup( newGroup, options );
+            return;
         }
+        return;
     };
 
     handleAddCommit = async ( newCommit: BookmarkCommit ) => {
@@ -254,8 +256,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                              selectCommit={this.handleCommitSelect}
                              selectBranch={this.handleBranchSelect}
                              selectGroup={this.handleGroupSelect}
-                             createGroup={this.handleAddGroup}
-                    />
+                             createGroup={this.handleAddGroup} />
                 </div>
 
                 {/*NavPanes*/}

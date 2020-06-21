@@ -1,0 +1,44 @@
+@import "../AppTheme";
+@import "../Sizes";
+
+.card {
+    background-color: $lowest;
+    border-radius: 0.5rem;
+    box-shadow: 1px 1px 3px gray;
+
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    max-height: 150px;
+    overflow-y: hidden;
+
+    padding: $padding-medium;
+
+    &:hover {
+        background-color: $low;
+    }
+
+    &:active {
+        transform: scale(1.02);
+    }
+
+    cursor: pointer;
+}
+
+.cardHeader {
+    font-size: 1.2rem;
+
+    border-bottom: 1px solid $high;
+
+    padding: $padding-small;
+}
+
+.cardBody {
+    padding: $padding-small;
+}
+
+.cardEmpty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -3,11 +3,13 @@
 .form {
     width: 100%;
     overflow: auto;
+    margin: 1rem 0 0;
 }
 
 .inputGroupSubmit {
     position: relative;
-    margin: 1rem 0;
+    margin: 0.25rem 0 0;
+    overflow: auto;
     width: 100%;
     & > * {
         margin: 0.25rem 0;
@@ -16,7 +18,7 @@
 
 .inputGroup {
     position: relative;
-    margin: 1rem 0;
+    margin: 0.25rem 0 0;
     width: 100%;
 
     display: flex;
