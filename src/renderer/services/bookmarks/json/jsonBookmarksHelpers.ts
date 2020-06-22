@@ -14,6 +14,7 @@ import { BookmarkBlobBuilder } from '../../../schemas/bookmarksBuilders';
 export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
     return await readFilesFromStorage<BookmarkBlob>(( filename, content ) => {
         try {
+            console.log(filename);
             const bookmark = JSON.parse( content );
             return new BookmarkBlobBuilder()
                 .title(filename.split('.')[0])

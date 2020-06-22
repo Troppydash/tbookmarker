@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 import path from 'path';
 
 const fsPromise = fs.promises;
@@ -15,7 +15,7 @@ export function CreateFoldersIfNotExists( path: string ): boolean {
             fs.mkdirSync( path, { recursive: true } );
             return true;
         } catch ( e ) {
-            console.error(e);
+            console.error( e );
             return false;
         }
     }
@@ -29,8 +29,8 @@ export function CreateFoldersIfNotExists( path: string ): boolean {
  */
 export function GetApplicationStoragePath(): string | null {
     const home = require( 'os' ).homedir();
-    const pt = path.join(home, 'Documents', 'Tbookmarker');
-    CreateFoldersIfNotExists(pt);
+    const pt = path.join( home, 'Documents', 'Tbookmarker' );
+    CreateFoldersIfNotExists( pt );
     return pt;
 }
 
@@ -46,7 +46,7 @@ export function GetApplicationBookmarkStoragePath() {
     }
 
 
-    const bookmarkPath = path.join(result, 'storage');
+    const bookmarkPath = path.join( result, 'storage' );
     if ( !CreateFoldersIfNotExists( bookmarkPath ) ) {
         return null;
     }
@@ -61,7 +61,7 @@ export function GetApplicationBookmarkStoragePath() {
  */
 export async function readFilesFromStorage<T>( onFile: ( filename: string, content: any ) => T ): Promise<T[]> {
     const dirname = GetApplicationBookmarkStoragePath();
-    if (dirname == null) {
+    if ( dirname == null ) {
         return [];
     }
 
@@ -72,11 +72,12 @@ export async function readFilesFromStorage<T>( onFile: ( filename: string, conte
 
     const result: T[] = [];
     for ( const filename of files ) {
-        const content = await fsPromise.readFile( dirname + filename, 'utf-8' );
+        const content = await fsPromise.readFile( path.join(dirname, filename), 'utf-8' );
         if ( content !== null ) {
             result.push( onFile( filename, content ) );
         }
     }
+
     return result;
 }
 
@@ -86,18 +87,30 @@ export async function readFilesFromStorage<T>( onFile: ( filename: string, conte
  * @param fileContent
  * @returns {Promise<boolean>}
  */
-export function writeFileToStorage(fileName: string, fileContent: any): Promise<boolean> {
+export function writeFileToStorage( fileName: string, fileContent: any ): Promise<boolean> {
     const storagePath = GetApplicationBookmarkStoragePath();
-    if (storagePath === null) {
-        return new Promise((resolve, reject) => reject(false));
+    if ( storagePath === null ) {
+        return new Promise( ( resolve, reject ) => reject( false ) );
     }
-    const filePath = path.join(storagePath, fileName);
+    const filePath = path.join( storagePath, fileName );
 
-    return fsPromise.writeFile(filePath, fileContent)
-        .then(() => {
+    return fsPromise.writeFile( filePath, fileContent )
+        .then( () => {
             return true;
-        })
-        .catch(() => {
+        } )
+        .catch( () => {
             return false;
-        })
+        } );
+}
+
+
+export async function exportFileToStorage( fileContent: any ): Promise<boolean> {
+    const { dialog } = require( 'electron' ).remote;
+
+    const path = await dialog.showSaveDialog({
+        properties: ['createDirectory'],
+        title: "Location to Export to"
+    })
+
+    return true;
 }

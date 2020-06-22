@@ -70,6 +70,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
     async componentDidMount(): Promise<void> {
         const doesExist = await doesAnyBookmarksExist();
+
         if ( !doesExist ) {
             alert( 'Adding Schema' );
             await this.props.AddSchema();
@@ -83,6 +84,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         } else {
             await this.props.LoadSingleBlob();
         }
+
         // Select the first group
         if ( !this.haveError() ) {
             if ( this.props.singleBlob.item!.bookmarks!.data.length > 0 ) {
