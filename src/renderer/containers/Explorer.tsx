@@ -22,6 +22,7 @@ import _ from 'lodash';
 import { Queryer } from '../services/bookmarks/exports';
 import { doesAnyBookmarksExist } from '../services/bookmarks/json/jsonBookmarksHelpers';
 import { BookmarkGroupBuilder } from '../schemas/bookmarksBuilders';
+import { exportFileToStorage, importFileFromStorage } from '../services/storage/storageHandlers';
 
 // Redux connector
 const mapStateToProps = ( state: RootState ) => ({
@@ -77,10 +78,10 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
             // TODO: Show first group dialog
             const firstGroup = new BookmarkGroupBuilder()
-                .name("Initial Group")
-                .description("Auto Generated Group")
+                .name( 'Initial Group' )
+                .description( 'Auto Generated Group' )
                 .build();
-            await this.props.AddGroup(firstGroup, this.getOptions());
+            await this.props.AddGroup( firstGroup, this.getOptions() );
         } else {
             await this.props.LoadSingleBlob();
         }
@@ -95,6 +96,11 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                 } );
             }
         }
+
+        // const success = await exportFileToStorage( JSON.stringify({ yes: 'sd' } ));
+        // console.log(success);
+        // const success = await importFileFromStorage<any>();
+        // console.log(success);
     }
 
     // start::Selection
@@ -239,8 +245,8 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     handleAddBookmarks = async ( newBookmark: BookmarkBookmarks[] ) => {
         const options = this.getOptions();
         if ( options !== null ) {
-            for (const bookmark of newBookmark) {
-                await this.props.AddBookmark(bookmark, options);
+            for ( const bookmark of newBookmark ) {
+                await this.props.AddBookmark( bookmark, options );
             }
         }
         await this.setBookmarks();
@@ -298,8 +304,8 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
                                         <Bookmarks selectBookmark={this.handleBookmarkSelect}
                                                    bookmarks={bookmarks || []}
                                                    selectedBookmark={selectedBookmarkID}
-                                        addBookmarks={this.handleAddBookmarks}
-                                        isEnabled={!!this.state.selectedCommitID}/>
+                                                   addBookmarks={this.handleAddBookmarks}
+                                                   isEnabled={!!this.state.selectedCommitID} />
                                     </div>
                                 </>
                             )

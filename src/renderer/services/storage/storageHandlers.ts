@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const fsPromise = fs.promises;
+const { dialog, app, shell } = require( 'electron' ).remote;
 
 /**
  * Create the folders given a folder path, returns if the action succeeded
@@ -72,7 +73,7 @@ export async function readFilesFromStorage<T>( onFile: ( filename: string, conte
 
     const result: T[] = [];
     for ( const filename of files ) {
-        const content = await fsPromise.readFile( path.join(dirname, filename), 'utf-8' );
+        const content = await fsPromise.readFile( path.join( dirname, filename ), 'utf-8' );
         if ( content !== null ) {
             result.push( onFile( filename, content ) );
         }
@@ -103,14 +104,104 @@ export function writeFileToStorage( fileName: string, fileContent: any ): Promis
         } );
 }
 
+/**
+ * Writes a file to any location
+ * @param path The location
+ * @param fileContent The file content
+ */
+export function writeFileToStorageFromPath( path: string, fileContent: any ): Promise<boolean> {
+    return fsPromise.writeFile( path, fileContent )
+        .then( () => {
+            return true;
+        } )
+        .catch( () => {
+            return false;
+        } );
+}
 
-export async function exportFileToStorage( fileContent: any ): Promise<boolean> {
-    const { dialog } = require( 'electron' ).remote;
+/**
+ * Read a file from storage, returns null if error occurs
+ * @param path The location of the file
+ */
+export function readFileFromStorageFromPath(path: string): Promise<string | null> {
+    return fsPromise.readFile(path)
+        .then(res => {
+            return res.toString();
+        })
+        .catch(err => {
+            return null;
+        })
+}
 
-    const path = await dialog.showSaveDialog({
-        properties: ['createDirectory'],
-        title: "Location to Export to"
-    })
+/**
+ * Show a custom save dialog
+ */
+async function showCustomSaveDialog() {
+    return dialog.showSaveDialog( {
+        properties: [ 'createDirectory' ],
+        defaultPath: app.getPath( 'downloads' ),
+        filters: [ {
+            name: 'JSON',
+            extensions: [ 'json' ]
+        } ],
+        title: 'Export Location'
+    } );
+}
 
-    return true;
+/**
+ * Export an object to storage, shows a user dialog
+ * @param fileContent The file content
+ */
+export async function exportFileToStorage( fileContent: string ): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+        const path = await showCustomSaveDialog();
+        if (!path) {
+            return reject("User not selected a path");
+        }
+        const success = await writeFileToStorageFromPath(path, fileContent);
+        if (success) {
+            shell.showItemInFolder(path);
+        }
+        return resolve("File export successful");
+    });
+
+}
+
+/**
+ * Show a custom read dialog
+ */
+async function showCustomReadDialog() {
+    return dialog.showOpenDialog( {
+        properties: [ 'openFile' ],
+        defaultPath: app.getPath( 'downloads' ),
+        filters: [ {
+            name: 'JSON',
+            extensions: [ 'json' ]
+        } ],
+        title: 'Import Location'
+    } );
+}
+
+/**
+ * Import a file from the storage, resolves with the data if successful
+ */
+export async function importFileFromStorage<T>(): Promise<T | string> {
+    return new Promise(async (resolve, reject) => {
+
+        const path = await showCustomReadDialog();
+        if ( !path || path.length !== 1 ) {
+            return reject("User not didn't select any path");
+        }
+
+        const result = await readFileFromStorageFromPath( path[0] );
+        if ( !result ) {
+            return reject("Cannot read the selected file");
+        }
+
+        try {
+            return resolve(JSON.parse( result ));
+        } catch ( e ) {
+            return reject("Cannot parse the selected file");
+        }
+    });
 }
