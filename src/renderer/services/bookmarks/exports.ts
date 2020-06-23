@@ -2,6 +2,9 @@ import { BookmarkQueryer } from './bookmarkQueryer';
 import { BookmarkCreator } from './bookmarkCreator';
 import { JSONQueryer } from './json/jsonBookmarkQueryer';
 import { JSONCreator } from './json/jsonBookmarkCreator';
+import { BlobImporter } from '../blobs/blobImporter';
+import { JSONBlobImporter } from '../blobs/json/jsonBlobImporter';
+import { StateManager } from '../stateManager/stateManager';
 
 
 /**
@@ -15,3 +18,17 @@ export const Queryer: BookmarkQueryer = new JSONQueryer();
  * @type {JSONCreator}
  */
 export const Creator: BookmarkCreator = new JSONCreator();
+
+/**
+ * Fake DI Importer
+ */
+export const Importer: BlobImporter = new JSONBlobImporter();
+
+interface State {
+    isExternal: boolean
+}
+
+// TODO: Make this better
+export const ExternalState: StateManager<State> = new StateManager<State>( {
+    isExternal: false
+} );

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { ExternalState } from '../bookmarks/exports';
 
 const fsPromise = fs.promises;
 const { dialog, app, shell } = require( 'electron' ).remote;
@@ -89,6 +90,11 @@ export async function readFilesFromStorage<T>( onFile: ( filename: string, conte
  * @returns {Promise<boolean>}
  */
 export function writeFileToStorage( fileName: string, fileContent: any ): Promise<boolean> {
+
+    if (ExternalState.state.isExternal) {
+        return new Promise(resolve => resolve(true));
+    }
+
     const storagePath = GetApplicationBookmarkStoragePath();
     if ( storagePath === null ) {
         return new Promise( ( resolve, reject ) => reject( false ) );
@@ -199,7 +205,11 @@ export async function importFileFromStorage<T>(): Promise<T | string> {
         }
 
         try {
-            return resolve(JSON.parse( result ));
+            const data = JSON.parse( result ) as T;
+            if (!data) {
+                return reject("Parsed type is not correct");
+            }
+            return resolve(data);
         } catch ( e ) {
             return reject("Cannot parse the selected file");
         }

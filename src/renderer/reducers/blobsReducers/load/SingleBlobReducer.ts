@@ -6,19 +6,24 @@ import {
     TBookmarkCreateItemTypes
 } from '../../../actions/create/bookmarksCreateActionsTypes';
 import _ from 'lodash';
+import { THandleImportActionType } from '../../../actions/importBlob/importBlobActionTypes';
+import { ExternalState } from '../../../services/bookmarks/exports';
 
 export interface ISingleBlobsState {
     readonly hasError: boolean;
     readonly item: BookmarkBlob | null;
     readonly reason?: string;
     readonly isLoading: boolean;
+
+    readonly isExternal: boolean;
 }
 
 const initialState: ISingleBlobsState = {
     hasError: false,
     item: null,
     reason: undefined,
-    isLoading: false
+    isLoading: false,
+    isExternal: false
 };
 
 
@@ -29,7 +34,9 @@ const initialState: ISingleBlobsState = {
  * @returns {{readonly isLoading: boolean; reason: undefined; readonly item: BookmarkBlob | null; hasError: boolean} | {isLoading: boolean; reason: string | undefined; item: BookmarkBlob | null; hasError: boolean} | {readonly isLoading: boolean; readonly reason?: string; item: {bookmarks: BookmarksSchema | null; title: string; uuid: string}; readonly hasError: boolean} | ISingleBlobsState | {isLoading: boolean; readonly reason?: string; readonly item: BookmarkBlob | null; readonly hasError: boolean}}
  * @constructor
  */
-export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions | TBookmarkCreateItemTypes> = (
+export const SingleBlobsReducer: Reducer<ISingleBlobsState,
+    TSingleBlobActions | TBookmarkCreateItemTypes | THandleImportActionType>
+    = (
     state = initialState,
     action
 ) => {
@@ -142,6 +149,16 @@ export const SingleBlobsReducer: Reducer<ISingleBlobsState, TSingleBlobActions |
             };
         }
 
+        case 'HANDLE_IMPORT': {
+            ExternalState.state.isExternal = true;
+
+            const { newBlob } = action.payload;
+            return {
+                ...state,
+                item: _.cloneDeep(newBlob),
+                isExternal: true
+            };
+        }
 
         default:
             return state;

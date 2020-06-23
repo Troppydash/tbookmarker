@@ -87,20 +87,45 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         }
 
         // Select the first group
-        if ( !this.haveError() ) {
-            if ( this.props.singleBlob.item!.bookmarks!.data.length > 0 ) {
-                this.setState( {
-                    selectedGroupID: this.props.singleBlob.item!.bookmarks!.data[0].uuid
-                }, () => {
-                    this.setBranches();
-                } );
+        // if ( !this.haveError() ) {
+        //     if ( this.props.singleBlob.item!.bookmarks!.data.length > 0 ) {
+        //         this.setState( {
+        //             selectedGroupID: this.props.singleBlob.item!.bookmarks!.data[0].uuid
+        //         }, () => {
+        //             this.setBranches();
+        //         } );
+        //     }
+        // }
+    }
+
+    setup = () => {
+        this.setState({
+            selectedBookmarkID: '',
+            selectedBranchID: '',
+            selectedCommitID: '',
+            selectedGroupID: '',
+
+            branches: null,
+            commits: null,
+            bookmarks: null
+        }, () => {
+            if ( !this.haveError() ) {
+                if ( this.props.singleBlob.item!.bookmarks!.data.length > 0 ) {
+                    this.setState( {
+                        selectedGroupID: this.props.singleBlob.item!.bookmarks!.data[0].uuid
+                    }, () => {
+                        this.setBranches();
+                    } );
+                }
             }
+        })
+    }
+
+    componentDidUpdate( prevProps: Readonly<PropsFromRedux>, prevState: Readonly<ExplorerState>, snapshot?: any ): void {
+        if (prevProps.singleBlob.item?.uuid !== this.props.singleBlob.item?.uuid) {
+            this.setup();
         }
 
-        // const success = await exportFileToStorage( JSON.stringify({ yes: 'sd' } ));
-        // console.log(success);
-        // const success = await importFileFromStorage<any>();
-        // console.log(success);
     }
 
     // start::Selection
@@ -261,7 +286,6 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
         return (
             <div className={Styles.explorerBody}>
-
                 {/*NavMenu*/}
                 <div className={Styles.navMenu}>
                     <NavMenu data={this.props.singleBlob.item}
