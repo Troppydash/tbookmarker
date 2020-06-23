@@ -223,6 +223,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             await this.props.AddBranch( newBranch, options );
         }
         await this.setBranches();
+        this.handleBranchSelect( newBranch.uuid );
     };
 
     handleAddGroup = async ( newGroup: BookmarkGroup ) => {
@@ -240,6 +241,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
             await this.props.AddCommit( newCommit, options );
         }
         await this.setCommits();
+        this.handleCommitSelect( newCommit.uuid );
     };
 
     handleAddBookmarks = async ( newBookmark: BookmarkBookmarks[] ) => {
