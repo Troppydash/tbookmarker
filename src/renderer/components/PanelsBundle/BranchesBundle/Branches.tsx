@@ -7,14 +7,15 @@ import FormStyles from '../../../styles/components/Form.module.scss';
 import ButtonStyles from '../../../styles/components/Button.module.scss';
 import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
 
-import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineFolderAdd } from 'react-icons/all';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineFolderAdd, MdContentCopy } from 'react-icons/all';
 import MakeModel, { ModelSize } from '../../MakeModelBundle/MakeModel';
 import ModelHeader from '../../MakeModelBundle/ModelHeaderBundle/ModelHeader';
 import ModelContent from '../../MakeModelBundle/ModelContentBundle/ModelContent';
 import { Formik } from 'formik';
 import FormModel from '../../MakeModelBundle/FormModel';
 import { BookmarkBranchBuilder } from '../../../schemas/bookmarksBuilders';
+import ContextMenu from '../../MakeContextMenuBundle/ContextMenu';
+import { WriteToClipboard } from '../../../services/desktop/desktopHelpers';
 
 interface BranchesProps {
     branches: BookmarkBranch[];
@@ -48,30 +49,27 @@ class Branches extends Component<BranchesProps, BranchesState> {
         } );
     };
 
-    createContextMenu = ( branchID: string ) => {
+    createContextMenu = ( branch: BookmarkBranch ) => {
         return (
-            <ul className={ContextMenuStyles.contextMenu}>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <span>{branchID}</span>
-                </li>
-                <div className={ContextMenuStyles.contextMenuDivider} />
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <div className={ContextMenuStyles.contextMenuItemsIcon}>
-                        <AiOutlineEdit />
-                    </div>
-                    <div className={ContextMenuStyles.contextMenuItemsText}>
-                        <span>Rename</span>
-                    </div>
-                </li>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <div className={ContextMenuStyles.contextMenuItemsIcon}>
-                        <AiOutlineDelete />
-                    </div>
-                    <div className={ContextMenuStyles.contextMenuItemsText}>
-                        <span>Delete</span>
-                    </div>
-                </li>
-            </ul>
+            <ContextMenu.Menu>
+                <ContextMenu.MenuItem>
+                    <span>{branch.uuid}</span>
+                </ContextMenu.MenuItem>
+                <ContextMenu.MenuDivider />
+                <ContextMenu.MenuItemWithIcon
+                    onClick={() => {
+                        WriteToClipboard( branch.name );
+                    }}
+                    icon={<MdContentCopy />}>
+                    <span>Copy To Clipboard</span>
+                </ContextMenu.MenuItemWithIcon>
+                <ContextMenu.MenuItemWithIcon icon={<AiOutlineEdit />}>
+                    <span>Rename</span>
+                </ContextMenu.MenuItemWithIcon>
+                <ContextMenu.MenuItemWithIcon icon={<AiOutlineDelete />}>
+                    <span>Delete</span>
+                </ContextMenu.MenuItemWithIcon>
+            </ContextMenu.Menu>
         );
     };
 
@@ -152,17 +150,17 @@ class Branches extends Component<BranchesProps, BranchesState> {
                             {
                                 branches.map( branch => {
                                     return (
-                                        <MakeContextMenu id={branch.uuid}
-                                                         key={branch.uuid}
-                                                         contextMenu={this.createContextMenu( branch.uuid )}
-                                                         onActivate={this.handleClick}>
+                                        <ContextMenu.Container id={branch.uuid}
+                                                     key={branch.uuid}
+                                                     contextMenu={this.createContextMenu( branch )}
+                                                     onActivate={this.handleClick}>
                                             <li className={
                                                 `${SelectableListStyles.selectableListItem} ${selectedBranch === branch.uuid && SelectableListStyles.selectableListItem__selected}`
                                             }
                                                 onClick={() => this.handleClick( branch.uuid )}>
                                                 {branch.name}
                                             </li>
-                                        </MakeContextMenu>
+                                        </ContextMenu.Container>
                                     );
                                 } )
                             }

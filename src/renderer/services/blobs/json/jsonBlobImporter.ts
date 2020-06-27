@@ -7,7 +7,7 @@ import { BookmarkBlobBuilder } from '../../../schemas/bookmarksBuilders';
  * JSON Implementation of importing a blob
  */
 export class JSONBlobImporter implements BlobImporter {
-    // Should be view instead
+    // TODO: Should be view instead
     import(): Promise<BookmarkBlob | string> {
         return new Promise<BookmarkBlob|string>(async (resolve, reject) =>  {
             const schema = await importFileFromStorage<BookmarksSchema>();

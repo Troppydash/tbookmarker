@@ -29,6 +29,7 @@ interface State {
 }
 
 // TODO: Make this better
+// TODO: Put the filename and others in the global reducer
 export const ExternalState: StateManager<State> = new StateManager<State>( {
     isExternal: false
 } );

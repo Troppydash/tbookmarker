@@ -4,15 +4,23 @@ import { BookmarkBookmarks, BookmarkBranch, BookmarkCommit } from '../../../sche
 import Styles from './Bookmarks.module.scss';
 import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
 import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
-import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineFolderAdd, GrFormClose, IoIosClose } from 'react-icons/all';
+import {
+    AiOutlineDelete,
+    AiOutlineEdit,
+    AiOutlineFolderAdd,
+    GrFormClose,
+    IoIosClose,
+    MdContentCopy
+} from 'react-icons/all';
 import FormModel from '../../MakeModelBundle/FormModel';
 import { ModelSize } from '../../MakeModelBundle/MakeModel';
-import { Form, Formik } from 'formik';
 import { BookmarkBookmarksBuilder, BookmarkBranchBuilder } from '../../../schemas/bookmarksBuilders';
 import FormStyles from '../../../styles/components/Form.module.scss';
 import ButtonStyles from '../../../styles/components/Button.module.scss';
 import _ from 'lodash';
+import ContextMenu from '../../MakeContextMenuBundle/ContextMenu';
+import { WriteToClipboard } from '../../../services/desktop/desktopHelpers';
+import { Queryer } from '../../../services/bookmarks/exports';
 
 interface BookmarksProps {
     bookmarks: BookmarkBookmarks[];
@@ -61,21 +69,27 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
         }
     }
 
-    createContextMenu = ( branchID: string ) => {
+    createContextMenu = ( bookmark: BookmarkBookmarks ) => {
         return (
-            <ul className={ContextMenuStyles.contextMenu}>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <span>{branchID}</span>
-                </li>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <AiOutlineEdit />
+            <ContextMenu.Menu>
+                <ContextMenu.MenuItem>
+                    <span>{bookmark.uuid}</span>
+                </ContextMenu.MenuItem>
+                <ContextMenu.MenuDivider />
+                <ContextMenu.MenuItemWithIcon
+                    onClick={() => {
+                        WriteToClipboard( bookmark.url );
+                    }}
+                    icon={<MdContentCopy />}>
+                    <span>Copy To Clipboard</span>
+                </ContextMenu.MenuItemWithIcon>
+                <ContextMenu.MenuItemWithIcon icon={<AiOutlineEdit />}>
                     <span>Rename</span>
-                </li>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <AiOutlineDelete />
+                </ContextMenu.MenuItemWithIcon>
+                <ContextMenu.MenuItemWithIcon icon={<AiOutlineDelete />}>
                     <span>Delete</span>
-                </li>
-            </ul>
+                </ContextMenu.MenuItemWithIcon>
+            </ContextMenu.Menu>
         );
     };
 
@@ -198,9 +212,9 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
                         {
                             bookmarks.map( bookmark => {
                                 return (
-                                    <MakeContextMenu id={bookmark.uuid}
-                                                     key={bookmark.uuid}
-                                                     contextMenu={this.createContextMenu( bookmark.uuid )}>
+                                    <ContextMenu.Container id={bookmark.uuid}
+                                                           key={bookmark.uuid}
+                                                           contextMenu={this.createContextMenu( bookmark )}>
                                         <li className={
                                             `${SelectableListStyles.selectableListItem} ${selectedBookmark === bookmark.uuid && SelectableListStyles.selectableListItem__selected}`
                                         }
@@ -211,7 +225,7 @@ class Bookmarks extends Component<BookmarksProps, BookmarksState> {
                                                 {bookmark.url}
                                             </span>
                                         </li>
-                                    </MakeContextMenu>
+                                    </ContextMenu.Container>
                                 );
                             } )
                         }

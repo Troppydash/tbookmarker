@@ -279,6 +279,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         await this.setBookmarks();
     };
 
+    // TODO: Make options a prop
     render() {
         const { singleBlob: { isLoading, hasError, reason, item } } = this.props;
         const { branches, commits, bookmarks } = this.state;

@@ -4,8 +4,7 @@ import { BookmarkBranch, BookmarkCommit } from '../../../schemas/bookmarkSchemas
 import Styles from './Commits.module.scss';
 import ContextMenuStyles from '../../../styles/components/ContextMenu.module.scss';
 import SelectableListStyles from '../../../styles/components/SelectableList.module.scss';
-import MakeContextMenu from '../../MakeContextMenuBundle/MakeContextMenu';
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineFolderAdd } from 'react-icons/all';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineFolderAdd, MdContentCopy } from 'react-icons/all';
 
 import { useToggle } from 'ahooks';
 import FormModel from '../../MakeModelBundle/FormModel';
@@ -14,6 +13,8 @@ import { Formik } from 'formik';
 import { BookmarkBranchBuilder, BookmarkCommitBuilder } from '../../../schemas/bookmarksBuilders';
 import FormStyles from '../../../styles/components/Form.module.scss';
 import ButtonStyles from '../../../styles/components/Button.module.scss';
+import ContextMenu from '../../MakeContextMenuBundle/ContextMenu';
+import { WriteToClipboard } from '../../../services/desktop/desktopHelpers';
 
 interface CommitsProps {
     commits: BookmarkCommit[];
@@ -31,21 +32,27 @@ function Commits( props: CommitsProps ) {
         props.selectCommit( uuid );
     };
 
-    const createContextMenu = ( commitID: string ) => {
+    const createContextMenu = ( commit: BookmarkCommit ) => {
         return (
-            <ul className={ContextMenuStyles.contextMenu}>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <span>{commitID}</span>
-                </li>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <AiOutlineEdit />
+            <ContextMenu.Menu>
+                <ContextMenu.MenuItem>
+                    <span>{commit.uuid}</span>
+                </ContextMenu.MenuItem>
+                <ContextMenu.MenuDivider />
+                <ContextMenu.MenuItemWithIcon
+                    onClick={() => {
+                        WriteToClipboard( commit.title );
+                    }}
+                    icon={<MdContentCopy />}>
+                    <span>Copy To Clipboard</span>
+                </ContextMenu.MenuItemWithIcon>
+                <ContextMenu.MenuItemWithIcon icon={<AiOutlineEdit />}>
                     <span>Rename</span>
-                </li>
-                <li className={ContextMenuStyles.contextMenuItems}>
-                    <AiOutlineDelete />
+                </ContextMenu.MenuItemWithIcon>
+                <ContextMenu.MenuItemWithIcon icon={<AiOutlineDelete />}>
                     <span>Delete</span>
-                </li>
-            </ul>
+                </ContextMenu.MenuItemWithIcon>
+            </ContextMenu.Menu>
         );
     };
 
@@ -135,16 +142,16 @@ function Commits( props: CommitsProps ) {
                     {
                         props.commits.map( commit => {
                             return (
-                                <MakeContextMenu id={commit.uuid}
-                                                 key={commit.uuid}
-                                                 contextMenu={createContextMenu( commit.uuid )}>
+                                <ContextMenu.Container id={commit.uuid}
+                                             key={commit.uuid}
+                                             contextMenu={createContextMenu( commit )}>
                                     <li className={
                                         `${SelectableListStyles.selectableListItem} ${props.selectedCommit === commit.uuid && SelectableListStyles.selectableListItem__selected}`
                                     }
                                         onClick={() => handleClick( commit.uuid )}>
                                         {commit.title}
                                     </li>
-                                </MakeContextMenu>
+                                </ContextMenu.Container>
                             );
                         } )
                     }
