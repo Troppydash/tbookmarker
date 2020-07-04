@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState, Fragment } from 'react';
 import { BookmarkBranch, BookmarkCommit } from '../../../schemas/bookmarkSchemas';
 
 import Styles from './Commits.module.scss';
@@ -15,6 +15,9 @@ import FormStyles from '../../../styles/components/Form.module.scss';
 import ButtonStyles from '../../../styles/components/Button.module.scss';
 import ContextMenu from '../../MakeContextMenuBundle/ContextMenu';
 import { WriteToClipboard } from '../../../services/desktop/desktopHelpers';
+import _ from 'lodash';
+import moment from 'moment';
+import { ConvertDate } from '../../../helpers/promiseHelpers';
 
 interface CommitsProps {
     commits: BookmarkCommit[];
@@ -24,10 +27,17 @@ interface CommitsProps {
     isEnabled: boolean;
 }
 
+// TODO: Split by date
+
+interface Commits {
+    [key: string]: BookmarkCommit[]
+}
+
 function Commits( props: CommitsProps ) {
 
-    const [ isShowing, { toggle } ] = useToggle();
+    const [ commits, setCommits ] = useState<Commits>( {} );
 
+    const [ isShowing, { toggle } ] = useToggle();
     const handleClick = ( uuid: string ) => {
         props.selectCommit( uuid );
     };
@@ -56,6 +66,14 @@ function Commits( props: CommitsProps ) {
         );
     };
 
+    useEffect( () => {
+        setGroupedCommits();
+    }, [ props.commits ] );
+
+    const setGroupedCommits = () => {
+        const newC = _.groupBy( props.commits, c => ConvertDate( c.createdAt ).format( 'MM/YY' ) );
+        setCommits( newC );
+    };
 
     return (
         <>
@@ -140,21 +158,50 @@ function Commits( props: CommitsProps ) {
                 </div>
                 <ul className={SelectableListStyles.selectableListContainer}>
                     {
-                        props.commits.map( commit => {
-                            return (
-                                <ContextMenu.Container id={commit.uuid}
-                                             key={commit.uuid}
-                                             contextMenu={createContextMenu( commit )}>
-                                    <li className={
-                                        `${SelectableListStyles.selectableListItem} ${props.selectedCommit === commit.uuid && SelectableListStyles.selectableListItem__selected}`
-                                    }
-                                        onClick={() => handleClick( commit.uuid )}>
-                                        {commit.title}
-                                    </li>
-                                </ContextMenu.Container>
-                            );
-                        } )
+                        // TODO: This can be massively optimized
+                        Object.keys( commits )
+                            .sort( ( a, b ) => moment( b, 'MM/YY' ).unix() - moment( a, 'MM/YY' ).unix() )
+                            .map( key => {
+                                const commitGroup = commits[key];
+                                return (
+                                    <Fragment key={key}>
+                                        <li className={`${SelectableListStyles.selectableListItem} ${SelectableListStyles.selectableListItem__header}`}>{key}</li>
+                                        {
+                                            commitGroup.map( commit => (
+                                                <Fragment key={commit.uuid}>
+                                                    <ContextMenu.Container id={commit.uuid}
+                                                                           key={commit.uuid}
+                                                                           contextMenu={createContextMenu( commit )}>
+                                                        <li className={
+                                                            `${SelectableListStyles.selectableListItem} ${props.selectedCommit === commit.uuid && SelectableListStyles.selectableListItem__selected}`
+                                                        }
+                                                            onClick={() => handleClick( commit.uuid )}>
+                                                            {commit.title}
+                                                        </li>
+                                                    </ContextMenu.Container>
+                                                </Fragment>
+                                            ) )
+                                        }
+                                    </Fragment>
+                                );
+                            } )
                     }
+                    {/*{*/}
+                    {/*    props.commits.map( commit => {*/}
+                    {/*        return (*/}
+                    {/*            <ContextMenu.Container id={commit.uuid}*/}
+                    {/*                                   key={commit.uuid}*/}
+                    {/*                                   contextMenu={createContextMenu( commit )}>*/}
+                    {/*                <li className={*/}
+                    {/*                    `${SelectableListStyles.selectableListItem} ${props.selectedCommit === commit.uuid && SelectableListStyles.selectableListItem__selected}`*/}
+                    {/*                }*/}
+                    {/*                    onClick={() => handleClick( commit.uuid )}>*/}
+                    {/*                    {commit.title}*/}
+                    {/*                </li>*/}
+                    {/*            </ContextMenu.Container>*/}
+                    {/*        );*/}
+                    {/*    } )*/}
+                    {/*}*/}
                 </ul>
             </div>
         </>

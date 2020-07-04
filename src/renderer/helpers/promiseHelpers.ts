@@ -36,3 +36,7 @@ export function DataOrError<T>( promise: Promise<T> ) {
 export function GetCurrentDate(): number {
     return +moment().format( 'YYYYMMDDHHmmss' );
 }
+
+export function ConvertDate(date: number): moment.Moment {
+    return moment(date, 'YYYYMMDDHHmmss' );
+}

@@ -38,7 +38,7 @@
         text-overflow: ellipsis;
     }
 
-    &:hover:not(.selectableListItem__selected) {
+    &:hover:not(.selectableListItem__selected):not(.selectableListItem__header) {
         background-color: $pane-items-background__hovered;
         color: $pane-items-text__hovered;
     }
@@ -47,6 +47,11 @@
 .selectableListItem__selected {
     background-color: $pane-items-background__selected;
     color: $pane-items-text__selected;
+}
+
+.selectableListItem__header {
+    background: $high;
+    color: $lowest;
 }
 
 .scrollable {
