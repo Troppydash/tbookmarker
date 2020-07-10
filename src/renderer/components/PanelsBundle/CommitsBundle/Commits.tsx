@@ -158,7 +158,7 @@ function Commits( props: CommitsProps ) {
                 </div>
                 <ul className={SelectableListStyles.selectableListContainer}>
                     {
-                        // TODO: This can be massively optimized
+                        // TODO: This can be massively optimized, but it is good enough here
                         Object.keys( commits )
                             .sort( ( a, b ) => moment( b, 'MM/YY' ).unix() - moment( a, 'MM/YY' ).unix() )
                             .map( key => {
@@ -167,7 +167,8 @@ function Commits( props: CommitsProps ) {
                                     <Fragment key={key}>
                                         <li className={`${SelectableListStyles.selectableListItem} ${SelectableListStyles.selectableListItem__header}`}>{key}</li>
                                         {
-                                            commitGroup.map( commit => (
+                                            commitGroup.sort((a, b) => b.createdAt - a.createdAt)
+                                                .map( commit => (
                                                 <Fragment key={commit.uuid}>
                                                     <ContextMenu.Container id={commit.uuid}
                                                                            key={commit.uuid}

@@ -152,8 +152,7 @@ class Branches extends Component<BranchesProps, BranchesState> {
                                     return (
                                         <ContextMenu.Container id={branch.uuid}
                                                      key={branch.uuid}
-                                                     contextMenu={this.createContextMenu( branch )}
-                                                     onActivate={this.handleClick}>
+                                                     contextMenu={this.createContextMenu( branch )}>
                                             <li className={
                                                 `${SelectableListStyles.selectableListItem} ${selectedBranch === branch.uuid && SelectableListStyles.selectableListItem__selected}`
                                             }
