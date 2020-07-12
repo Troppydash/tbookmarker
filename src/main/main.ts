@@ -24,7 +24,8 @@ const createWindow = async () => {
         minWidth: 600, minHeight: 400,
 
         frame: false, // Hide title bars
-        titleBarStyle: 'hidden'
+        titleBarStyle: 'hidden',
+        title: 'TBookmarker'
     } );
 
     if ( process.env.NODE_ENV !== 'production' ) {

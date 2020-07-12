@@ -20,7 +20,7 @@ import {
     CreateSchema
 } from '../../actions/create/bookmarksCreateActions';
 import { connect, ConnectedProps } from 'react-redux';
-import { ImportBlob } from '../../actions/importBlob/importBlobActions';
+import { ImportBlob, ViewBlob } from '../../actions/importBlob/importBlobActions';
 
 // Redux connector
 const mapStateToProps = ( state: RootState ) => ({
@@ -28,7 +28,8 @@ const mapStateToProps = ( state: RootState ) => ({
 });
 
 const mapDispatchToProps = {
-    ImportBlob: ImportBlob
+    ImportBlob: ImportBlob,
+    ViewBlob: ViewBlob,
 };
 
 const connector = connect( mapStateToProps, mapDispatchToProps );
@@ -38,14 +39,30 @@ interface TopbarState {
 
 }
 
+const characterLimit = 19;
+
+// TODO: Make readonly a context prop
 class Topbar extends Component<PropsFromRedux, TopbarState> {
 
     GetTrailing = () => {
-        if (this.props.singleBlob.isExternal) {
-            return " - External";
+        let trailing = '';
+
+        if ( this.props.singleBlob.item?.isReadOnly ) {
+            trailing += ' >' + ', ReadOnly';
         }
-        return "";
-    }
+
+        if ( this.props.singleBlob.isExternal ) {
+            trailing += ' >' + ', External';
+        }
+        if ( this.props.singleBlob.item ) {
+            const fullPath = this.props.singleBlob.item?.absolutePath;
+            trailing += ' >' + (fullPath.length > characterLimit
+                ? `...${fullPath.substring( fullPath.length - characterLimit )}`
+                : fullPath);
+        }
+
+        return trailing;
+    };
 
     render(): React.ReactNode {
         return (
@@ -55,7 +72,7 @@ class Topbar extends Component<PropsFromRedux, TopbarState> {
                     currentWindow={currentWindow}
                     platform={process.platform as any}
                     theme={{}}
-                    title={`TBookmarker${this.GetTrailing()}`}
+                    title={`TBookmarker ${this.GetTrailing()}`}
                     menu={[
                         {
                             label: 'File',
@@ -69,6 +86,13 @@ class Topbar extends Component<PropsFromRedux, TopbarState> {
                                 {
                                     label: 'Import',
                                     click: () => {
+                                        this.props.ViewBlob();
+                                    }
+                                },
+                                {
+                                    label: 'Export',
+                                    click: () => {
+                                        // TODO: Export
                                         this.props.ImportBlob();
                                     }
                                 }
@@ -89,4 +113,4 @@ class Topbar extends Component<PropsFromRedux, TopbarState> {
     }
 }
 
-export default connector(Topbar);
+export default connector( Topbar );

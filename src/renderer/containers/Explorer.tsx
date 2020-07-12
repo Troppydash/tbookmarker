@@ -52,6 +52,8 @@ interface ExplorerState {
     branches: BookmarkBranch[] | null;
     commits: BookmarkCommit[] | null;
     bookmarks: BookmarkBookmarks[] | null;
+
+    isReadOnly: boolean;
 }
 
 /**
@@ -66,7 +68,9 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
         branches: null,
         commits: null,
-        bookmarks: null
+        bookmarks: null,
+
+        isReadOnly: true
     };
 
     async componentDidMount(): Promise<void> {
@@ -99,7 +103,7 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     }
 
     setup = () => {
-        this.setState({
+        this.setState( {
             selectedBookmarkID: '',
             selectedBranchID: '',
             selectedCommitID: '',
@@ -107,26 +111,29 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
 
             branches: null,
             commits: null,
-            bookmarks: null
+            bookmarks: null,
+
+            isReadOnly: true
         }, () => {
             if ( !this.haveError() ) {
                 if ( this.props.singleBlob.item!.bookmarks!.data.length > 0 ) {
                     this.setState( {
+                        isReadOnly: this.props.singleBlob.item!.isReadOnly === undefined ? true : this.props.singleBlob.item!.isReadOnly,
                         selectedGroupID: this.props.singleBlob.item!.bookmarks!.data[0].uuid
                     }, () => {
                         this.setBranches();
                     } );
                 }
             }
-        })
-    }
+        } );
+    };
 
     componentDidUpdate( prevProps: Readonly<PropsFromRedux>, prevState: Readonly<ExplorerState>, snapshot?: any ): void {
-        if (prevProps.singleBlob.item?.uuid !== this.props.singleBlob.item?.uuid) {
+        if ( prevProps.singleBlob.item?.uuid !== this.props.singleBlob.item?.uuid ) {
             this.setup();
         }
-
     }
+
 
     // start::Selection
     handleGroupSelect = ( groupID: string ) => {
@@ -242,7 +249,13 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
         };
     };
 
+
     handleAddBranch = async ( newBranch: BookmarkBranch ) => {
+
+        if (this.state.isReadOnly) {
+            return;
+        }
+
         const options = this.getOptions();
         if ( options !== null ) {
             await this.props.AddBranch( newBranch, options );
@@ -252,6 +265,11 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     };
 
     handleAddGroup = async ( newGroup: BookmarkGroup ) => {
+
+        if (this.state.isReadOnly) {
+            return;
+        }
+
         const options = this.getOptions();
         if ( options !== null ) {
             await this.props.AddGroup( newGroup, options );
@@ -261,6 +279,11 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     };
 
     handleAddCommit = async ( newCommit: BookmarkCommit ) => {
+
+        if (this.state.isReadOnly) {
+            return;
+        }
+
         const options = this.getOptions();
         if ( options !== null ) {
             await this.props.AddCommit( newCommit, options );
@@ -270,6 +293,11 @@ class Explorer extends Component<PropsFromRedux, ExplorerState> {
     };
 
     handleAddBookmarks = async ( newBookmark: BookmarkBookmarks[] ) => {
+
+        if (this.state.isReadOnly) {
+            return;
+        }
+
         const options = this.getOptions();
         if ( options !== null ) {
             for ( const bookmark of newBookmark ) {

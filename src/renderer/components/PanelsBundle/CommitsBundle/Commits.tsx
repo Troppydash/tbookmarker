@@ -27,8 +27,6 @@ interface CommitsProps {
     isEnabled: boolean;
 }
 
-// TODO: Split by date
-
 interface Commits {
     [key: string]: BookmarkCommit[]
 }

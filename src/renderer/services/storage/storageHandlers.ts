@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { ExternalState } from '../bookmarks/exports';
+import { BookmarkMetadata } from '../../schemas/bookmarkSchemas';
 
 const fsPromise = fs.promises;
 const { dialog, app, shell } = require( 'electron' ).remote;
@@ -61,7 +62,7 @@ export function GetApplicationBookmarkStoragePath() {
  * @param onFile
  * @returns {Promise<any[] | T[]>}
  */
-export async function readFilesFromStorage<T>( onFile: ( filename: string, content: any ) => T ): Promise<T[]> {
+export async function readFilesFromStorage<T>( onFile: ( absPath: string, filename: string, content: any ) => T ): Promise<T[]> {
     const dirname = GetApplicationBookmarkStoragePath();
     if ( dirname == null ) {
         return [];
@@ -76,7 +77,7 @@ export async function readFilesFromStorage<T>( onFile: ( filename: string, conte
     for ( const filename of files ) {
         const content = await fsPromise.readFile( path.join( dirname, filename ), 'utf-8' );
         if ( content !== null ) {
-            result.push( onFile( filename, content ) );
+            result.push( onFile( path.resolve(dirname, filename), filename, content ) );
         }
     }
 
@@ -191,7 +192,7 @@ async function showCustomReadDialog() {
 /**
  * Import a file from the storage, resolves with the data if successful
  */
-export async function importFileFromStorage<T>(): Promise<T | string> {
+export async function importFileFromStorage<T extends BookmarkMetadata>(): Promise<T | string> {
     return new Promise(async (resolve, reject) => {
 
         const path = await showCustomReadDialog();
@@ -209,6 +210,7 @@ export async function importFileFromStorage<T>(): Promise<T | string> {
             if (!data) {
                 return reject("Parsed type is not correct");
             }
+            data.absolutePath = path;
             return resolve(data);
         } catch ( e ) {
             return reject("Cannot parse the selected file");

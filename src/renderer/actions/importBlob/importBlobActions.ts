@@ -20,7 +20,7 @@ export const ImportBlob: ActionCreator<ThunkAction<Promise<IHandleImport | IHand
 
     dispatch( StartImportingActionCreator() );
 
-    const { data, error } = await DataOrError( Importer.import() );
+    const { data, error } = await DataOrError( Importer.import(false) );
 
     if ( error ) {
         return dispatch( HandleErrorActionCreator(error) );
@@ -28,8 +28,31 @@ export const ImportBlob: ActionCreator<ThunkAction<Promise<IHandleImport | IHand
 
     dispatch( ClearImportErrorsActionCreator() );
 
+    // Call set title
     return dispatch( HandleImportActionCreator( data ) );
 };
+
+/**
+ * Action Creator to import a blob from storage
+ * @constructor
+ */
+export const ViewBlob: ActionCreator<ThunkAction<Promise<IHandleImport | IHandleError>, unknown, null, IHandleImport | IHandleError>>
+    = () => async ( dispatch: Dispatch ) => {
+
+    dispatch( StartImportingActionCreator() );
+
+    const { data, error } = await DataOrError( Importer.import(true) );
+
+    if ( error ) {
+        return dispatch( HandleErrorActionCreator(error) );
+    }
+
+    dispatch( ClearImportErrorsActionCreator() );
+
+    // Call set title
+    return dispatch( HandleImportActionCreator( data ) );
+};
+
 
 export const HandleImportActionCreator: ActionCreator<IHandleImport>
     = ( newBlob: BookmarkBlob ) => ({

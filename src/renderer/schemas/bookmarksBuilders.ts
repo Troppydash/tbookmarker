@@ -19,8 +19,20 @@ export class BookmarkBlobBuilder {
         this._BookmarkBlob = {
             title: '',
             uuid: uuidv4(),
-            bookmarks: null
+            bookmarks: null,
+            absolutePath: '',
+            isReadOnly: false,
         };
+    }
+
+    absolutePath(absolutePath: string) : BookmarkBlobBuilder {
+        this._BookmarkBlob.absolutePath = absolutePath;
+        return this;
+    }
+
+    isReadOnly(isReadOnly: boolean) : BookmarkBlobBuilder {
+        this._BookmarkBlob.isReadOnly = isReadOnly;
+        return this;
     }
 
     title( title: string ): BookmarkBlobBuilder {
@@ -50,9 +62,22 @@ export class BookmarkSchemaBuilder {
             createdAt: GetCurrentDate(),
             lastModifiedAt: GetCurrentDate(),
 
+            isReadOnly: false,
+            absolutePath: '',
             data: []
         };
     }
+
+    isReadOnly( isReadOnly: boolean ): BookmarkSchemaBuilder {
+        this._BookmarkSchema.isReadOnly = isReadOnly;
+        return this;
+    }
+
+    absolutePath( absolutePath: string ): BookmarkSchemaBuilder {
+        this._BookmarkSchema.absolutePath = absolutePath;
+        return this;
+    }
+
 
     createdAt( createdAt: number ): BookmarkSchemaBuilder {
         this._BookmarkSchema.createdAt = createdAt;
@@ -196,7 +221,6 @@ export class BookmarkCommitBuilder {
     }
 }
 
-// TODO: Rest of builder class
 /**
  * BookmarkBookmarks Builder Class
  */

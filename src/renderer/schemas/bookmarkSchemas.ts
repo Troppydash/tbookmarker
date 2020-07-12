@@ -54,8 +54,14 @@ export interface BookmarkGroup {
     branches: BookmarkBranch[];
 }
 
+export interface BookmarkMetadata {
+    absolutePath: string;
+    isReadOnly?: boolean;
+}
+
 // One json file
-export interface BookmarksSchema {
+// TODO: This bookmark metadata is copied two times, fix it later
+export interface BookmarksSchema extends BookmarkMetadata {
     uuid: string;
     createdAt: number;
     lastModifiedAt: number;
@@ -64,7 +70,7 @@ export interface BookmarksSchema {
 }
 
 // One blob
-export interface BookmarkBlob {
+export interface BookmarkBlob extends BookmarkMetadata {
     title: string;
     uuid: string;
     bookmarks: BookmarksSchema | null;
@@ -76,7 +82,8 @@ export const exampleSchema: BookmarksSchema = {
     uuid: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
     createdAt: 20200921073020,
     lastModifiedAt: 20200922073020,
-
+    absolutePath: 'path/to/json/file',
+    isReadOnly: false,
     data: [
         {
             uuid: '9b1feb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',

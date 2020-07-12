@@ -3,8 +3,6 @@
 import { BookmarkBlob, BookmarksSchema } from '../../../schemas/bookmarkSchemas';
 import { readFilesFromStorage, writeFileToStorage } from '../../storage/storageHandlers';
 
-import { v4 as uuidv4 } from 'uuid';
-import { makeBookmarkBlob } from '../../../schemas/bookmarksEmpty';
 import { BookmarkBlobBuilder } from '../../../schemas/bookmarksBuilders';
 
 /**
@@ -12,12 +10,14 @@ import { BookmarkBlobBuilder } from '../../../schemas/bookmarksBuilders';
  * @returns {Promise<any[] | null>}
  */
 export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
-    return await readFilesFromStorage<BookmarkBlob>(( filename, content ) => {
+    return await readFilesFromStorage<BookmarkBlob>((absPath, filename, content) => {
         try {
             const bookmark = JSON.parse( content );
             return new BookmarkBlobBuilder()
                 .title(filename.split('.')[0])
                 .bookmarks(bookmark)
+                .absolutePath(absPath)
+                .isReadOnly(false)
                 .build();
         } catch ( e ) {
             return new BookmarkBlobBuilder()
@@ -34,12 +34,14 @@ export async function loadAllBookmarksBlobs(): Promise<BookmarkBlob[] | null> {
  * @returns {Promise<null | BookmarkBlob>}
  */
 export async function loadBookmarkBlobByDate(date: number): Promise<BookmarkBlob | null> {
-    let items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
+    let items = await readFilesFromStorage<BookmarkBlob>( ( absPath, filename, content) => {
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
             return new BookmarkBlobBuilder()
                 .title(filename.split('.')[0])
                 .bookmarks(bookmark)
+                .absolutePath(absPath)
+                .isReadOnly(false)
                 .build();
         } catch ( e ) {
             return new BookmarkBlobBuilder()
@@ -61,12 +63,14 @@ export async function loadBookmarkBlobByDate(date: number): Promise<BookmarkBlob
  * @returns {Promise<any>}
  */
 export async function loadMostRecentBookmarkBlob(): Promise<BookmarkBlob | null> {
-    const items = await readFilesFromStorage<BookmarkBlob>( ( filename, content ) => {
+    const items = await readFilesFromStorage<BookmarkBlob>( ( absPath, filename, content) => {
         try {
             const bookmark: BookmarksSchema = JSON.parse( content );
             return new BookmarkBlobBuilder()
                 .title( filename.split( '.' )[0] )
                 .bookmarks( bookmark )
+                .absolutePath(absPath)
+                .isReadOnly(false)
                 .build();
         } catch ( e ) {
             return new BookmarkBlobBuilder()

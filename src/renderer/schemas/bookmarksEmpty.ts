@@ -92,26 +92,26 @@ export function makeBookmarkGroup(): BookmarkGroup {
  * Create an empty schema
  * @returns {{createdAt: number; lastModifiedAt: number; data: any[]; uuid: string}}
  */
-export function makeBookmarksSchema(): BookmarksSchema {
-    return {
-        uuid: uuidv4(),
-        createdAt: GetCurrentDate(),
-        lastModifiedAt: GetCurrentDate(),
-
-        data: []
-    };
-}
+// export function makeBookmarksSchema(): BookmarksSchema {
+//     return {
+//         uuid: uuidv4(),
+//         createdAt: GetCurrentDate(),
+//         lastModifiedAt: GetCurrentDate(),
+//
+//         data: []
+//     };
+// }
 
 /**
  * Create an empty blob
  * @returns {{bookmarks: null ; title: string ; uuid: string}}
  */
-export function makeBookmarkBlob(): BookmarkBlob {
-    return {
-        title: '',
-        uuid: uuidv4(),
-        bookmarks: null
-    };
-}
+// export function makeBookmarkBlob(): BookmarkBlob {
+//     return {
+//         title: '',
+//         uuid: uuidv4(),
+//         bookmarks: null
+//     };
+// }
 
 
